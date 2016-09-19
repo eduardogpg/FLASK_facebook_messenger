@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 import json
 import requests
 import threading
+from time import sleep
 
-import models
-
+from models import User as UserModel
+from structs import (text_message, typing_message)
 
 def received_message(event, token):
     sender_id = event['sender']['id']
@@ -16,43 +16,31 @@ def received_message(event, token):
 
     validate_user(token, sender_id)
 
-
-def validate_user(token, recipient_id):
-    user = models.get_user(recipient_id) #exist in the database?
-    if user is None:
-
-        typing = threading.Thread(name='sent_typing_message',
-                                    target=sent_typing_message,
-                                    args = (token, recipient_id) )
-        typing.start()
-
-        user = user_API(token, recipient_id) 
-        new_user = models.new_user( user )
-
-        if new_user is not None:
-            message = 'Te damos la bienvenida al nuevo curso de CódigoFacilito {name}'.format(name = user['first_name'])
-            send_text_message(token, recipient_id, message)
-
-    else:
+def validate_user(token, user_id):
+    user = UserModel.find(user_id = user_id)
+    if user is not None:
         message = 'Es bueno tenerte de regreso {name}'.format(name = user['first_name'])
-        send_text_message(token, recipient_id, message)
-        
+        message_data = text_message(user_id, message)
+        call_send_API(token, message_data)
+    else:
+        say_hello_user(token, user_id)
+   
+def say_hello_user(token, user_id):
+    typing = threading.Thread(name='send_typing_message', target=send_typing_message, args = (token, user_id) )
+    typing.start()
 
-def sent_typing_message(token, recipient_id):
-    message_data = {
-        'recipient': {'id': recipient_id},
-        'sender_action' : 'typing_on'
-    }
+    data = call_user_API(token, user_id) 
+    user = UserModel.new(   first_name = data['first_name'], last_name = data['last_name'],
+                            gender = data['gender'], user_id = user_id)
+    UserModel.save(user)
+
+    message = 'Te damos la bienvenida al nuevo curso de CódigoFacilito {name}'.format(name = user['first_name'])
+    message_data = text_message(user_id, message)
     call_send_API(token, message_data)
 
-
-def send_text_message(token, recipient_id, message_text):
-    message_data = {
-        'recipient': {'id': recipient_id},
-        'message': { 'text': message_text}
-    }
+def send_typing_message(token, user_id):
+    message_data = typing_message(user_id)
     call_send_API(token, message_data)
-
 
 def call_send_API(token, data):
     res = requests.post('https://graph.facebook.com/v2.6/me/messages',
@@ -63,13 +51,10 @@ def call_send_API(token, data):
     if res.status_code == 200:
         print "Mensaje enviado exitosamente!"
     
-
-def user_API(token, user_id):
-    res = requests.get('https://graph.facebook.com/v2.6/' + user_id,
+def call_user_API(token, user_id):
+    res = requests.get('https://graph.facebook.com/v2.6/'+ user_id,
                 params={ 'access_token': token} )
 
     data = json.loads(res.text)
-    data['user_id'] = user_id
     return data
-
 

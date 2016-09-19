@@ -3,10 +3,35 @@ from pymongo import MongoClient
 client = MongoClient('localhost', 27017)
 db = client.bot_codigo_facilito
 
-def get_user(user_id):
-	user = db.users.find_one( {"user_id": user_id } )
-	return user
+class User(object):
+	@staticmethod
+	def get_new_preference():
+		data = {'completed': False}
+		return data
 
-def new_user(user_instance):
-	user_id = db.users.insert_one(user_instance)
-	return user_id
+	@staticmethod
+	def new_preference():
+		preference = []
+		preference.append( User.get_new_preference() )
+		preference.append( User.get_new_preference() )
+		return preference
+
+	@classmethod
+	def find(cls, **kwargs):
+		user = db.users.find_one( kwargs )
+		return user	
+
+	@classmethod
+	def new(cls, **kwargs):
+		data = {}
+		for key, value in kwargs.iteritems():
+			data[key] = value
+
+		data['preference'] = User.new_preference()
+		return data
+
+	@classmethod
+	def save(cls, data):
+		user_id = db.users.insert_one(data)
+		return user_id
+

@@ -30,7 +30,7 @@ def verify():
 		for page_entry in data['entry']:
 			page_id = page_entry['id']
 			time_of_event = page_entry['time']
-			
+				
 			for message_event in page_entry['messaging']:
 				if "message" in message_event:
 					received_message(message_event, app.config['PAGE_ACCESS_TOKEN'])
