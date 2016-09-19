@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import json
 import requests
 import threading
@@ -14,17 +17,25 @@ def received_message(event, token):
     validate_user(token, sender_id)
 
 
-def validate_user(token, user_id):
-    user = models.get_user(user_id) #exist in the database?
+def validate_user(token, recipient_id):
+    user = models.get_user(recipient_id) #exist in the database?
     if user is None:
-        user = user_API(token, user_id)
+
+        typing = threading.Thread(name='sent_typing_message',
+                                    target=sent_typing_message,
+                                    args = (token, recipient_id) )
+        typing.start()
+
+        user = user_API(token, recipient_id) 
         new_user = models.new_user( user )
+
         if new_user is not None:
-            print "Nuevo usuario registrado en la base de datos!"
+            message = 'Te damos la bienvenida al nuevo curso de CódigoFacilito {name}'.format(name = user['first_name'])
+            send_text_message(token, recipient_id, message)
 
     else:
         message = 'Es bueno tenerte de regreso {name}'.format(name = user['first_name'])
-        send_text_message(token, user_id, message)
+        send_text_message(token, recipient_id, message)
         
 
 def sent_typing_message(token, recipient_id):
