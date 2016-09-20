@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, ASCENDING
 
 client = MongoClient('localhost', 27017)
 db = client.bot_codigo_facilito
@@ -26,12 +26,21 @@ class User(object):
 		data = {}
 		for key, value in kwargs.iteritems():
 			data[key] = value
-
-		data['preference'] = User.new_preference()
 		return data
 
 	@classmethod
 	def save(cls, data):
-		user_id = db.users.insert_one(data)
-		return user_id
+		db.users.insert_one(data)
+		return data
 
+class Preference(object):
+	@classmethod
+	def get_first(cls):
+		#return db.preferences.find().sort("order").limit(1)
+		return db.preferences.find_one()
+
+class Message(object):
+	@classmethod
+	def find(cls, **kwargs):
+		objects = db.common_messages.find(kwargs).sort("order", ASCENDING)
+		return objects

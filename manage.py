@@ -18,8 +18,8 @@ def validate_verify_token(request):
 def index():
 	return 'Bienvenido al bot con Flaks!'
 
-@app.route('/verify', methods=['GET', 'POST'])
-def verify():
+@app.route('/webhook', methods=['GET', 'POST'])
+def webhook():
 	if request.method == 'GET':
 		return validate_verify_token(request)
 	
@@ -38,4 +38,4 @@ def verify():
 		return "ok"
 
 if __name__ == '__main__':
-	app.run(port = 3000)
+	app.run(port = 8000)

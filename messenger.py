@@ -6,7 +6,10 @@ import threading
 from time import sleep
 
 from models import User as UserModel
-from structs import (text_message, typing_message)
+from models import Preference as PreferenceModel
+from models import Message as MessageModel
+
+from structs import (text_message, typing_message, quick_replies_by_model)
 
 def received_message(event, token):
     sender_id = event['sender']['id']
@@ -22,21 +25,35 @@ def validate_user(token, user_id):
         message = 'Es bueno tenerte de regreso {name}'.format(name = user['first_name'])
         message_data = text_message(user_id, message)
         call_send_API(token, message_data)
-    else:
-        say_hello_user(token, user_id)
+    else:   
+        save_user(token, user_id)
    
-def say_hello_user(token, user_id):
-    typing = threading.Thread(name='send_typing_message', target=send_typing_message, args = (token, user_id) )
-    typing.start()
-
+def save_user(token, user_id):
     data = call_user_API(token, user_id) 
-    user = UserModel.new(   first_name = data['first_name'], last_name = data['last_name'],
-                            gender = data['gender'], user_id = user_id)
-    UserModel.save(user)
+    user = UserModel.new( first_name = data['first_name'], last_name = data['last_name'], gender = data['gender'], user_id = user_id)
+    new_user = UserModel.save(user)
+    if user is not None:
+        send_loop_messages(token, user )
 
-    message = 'Te damos la bienvenida al nuevo curso de CódigoFacilito {name}'.format(name = user['first_name'])
-    message_data = text_message(user_id, message)
-    call_send_API(token, message_data)
+def send_loop_messages(token, user, type_message = 'common', context = 'welcome'):
+    messages = MessageModel.find(type = type_message,  context = context)
+    for message in messages:
+        if 'content' in message:
+            user_id = user['user_id']
+            content = message['content']
+            
+            if 'format' in message:
+                content = content.format(username = user['first_name'])
+
+            message_data = text_message(user_id, content)
+            msg_send = threading.Thread(name='call_send_API', target=call_send_API, args = (token, message_data) )
+            msg_send.start()
+            
+            sleep(1)
+
+            typing = threading.Thread(name='send_typing_message', target=send_typing_message, args = (token, user_id) )
+            typing.start()
+
 
 def send_typing_message(token, user_id):
     message_data = typing_message(user_id)
