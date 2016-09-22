@@ -30,9 +30,13 @@ class User(object):
 
 	@classmethod
 	def save(cls, data):
-		db.users.insert_one(data)
+		db.users.save(data)
 		return data
 
+	@classmethod
+	def remove(cls, **kwargs):
+		db.users.remove(kwargs)
+		
 class Preference(object):
 	@classmethod
 	def get_first(cls):
