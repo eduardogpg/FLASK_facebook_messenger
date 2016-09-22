@@ -58,8 +58,9 @@ def create_quick_replies_message(data, user):
 
 def create_text_message(data, user, data_model):
     message = data.get('content', '')
+
     if 'format' in data:
-        message = message.format(**user)
+        message = message.format(**data_model) if 'data_model' in data else message.format(**user)
     return text_message(user['user_id'], message)
 
 def create_quick_replies_location(data, user):

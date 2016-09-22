@@ -1,7 +1,7 @@
 {
 	"_id" : ObjectId("57e2a706b93c0d8d5ce74158"),
 	"title" : "Mensaje de bienvenida",
-	"content" : "Hola {username} me complace anunciarte que hemos registrados tus datos correctamente :D ",
+	"content" : "Hola {first_name} me complace anunciarte que hemos registrados tus datos correctamente :D ",
 	"context" : "welcome",
 	"type" : "common",
 	"order" : 1,
@@ -31,7 +31,7 @@
 	"title" : "obtener preferencias",
 	"content" : "¿Cúal es tu color favorito?",
 	"context" : "welcome",
-	"type" : "common",
+	"type" : "not common",
 	"order" : 4,
 	"type_message" : "quick_replies",
 	"replies" : [
@@ -46,14 +46,14 @@
 	]
 }
 {
-	"_id" : ObjectId("57e2b876b93c0d8d5ce7415c"),
+	"_id" : ObjectId("57e2babeb93c0d8d5ce7415d"),
 	"title" : "Ubicación",
 	"content" : "¿Cual es tu locación?",
-	"context" : "common",
+	"type" : "common",
+	"context" : "welcome",
 	"order" : 5,
 	"type_message" : "quick_replies_location"
 }
-
 {
 	"_id" : ObjectId("57e4000d3c939389b45df983"),
 	"title" : "Clima info",
@@ -64,4 +64,3 @@
 	"format" : true,
 	"type_message" : "text_message"
 }
-

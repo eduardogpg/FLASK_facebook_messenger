@@ -29,11 +29,14 @@ def received_message(event, token):
 
 def handler_actions(user_id, message):
     user = UserModel.find(user_id = user_id)
-    
-    if user is not None:
+    validate_quick_replies(user, message)
+
+    """
+    if user is not None or user is not :
         validate_quick_replies(user, message)
     elif user is None:
         first_steps(user_id)
+    """
 
 def validate_quick_replies(user, message):
     quick_replie = message.get('quick_reply', {})
@@ -58,24 +61,28 @@ def set_user_location(coordinates, user):
     user['long'] = coordinates['long']
     UserModel.save(user)
 
-def send_message_location(log, lat, user):
+def send_message_location(lat, log, user):
     res = requests.get('http://api.geonames.org/findNearByWeatherJSON',
-                params={ 'lat': lat, 'log': log, username: 'eduardo_gpg'} })
+                params={ 'lat': str(lat), 'lng': str(log), 'username': 'eduardo_gpg'}   )
 
+    print "Entro aqui "
     if res.status_code == 200:
         res = json.loads(res.text)
 
+        print "El estatues es 200"
+
         city = res['weatherObservation']['stationName']
         temperature = res['weatherObservation']['temperature']
-        data_model {'city': city, 'temperature': temperature}
+        data_model = {'city': city, 'temperature': temperature }
+        send_loop_messages(user, 'specific', 'temperature', data_model)
         
-        #send_loop_messages(user, 'specific', 'temperature', data_model)
 
 def set_replies_user(quick_replie, user):
     pass
 
 def delete_user(user_id):
     UserModel.remove(user_id = user_id)
+    print "Some message"
 
 def validate_actions(user_id):
     message = 'Es bueno tenerte de regreso {name}'.format(name = user['first_name'])
@@ -91,8 +98,10 @@ def first_steps(user_id):
 def send_loop_messages(user, type_message='', context = '', data_model = {} ):
     messages = MessageModel.find(type = type_message,  context = context)
 
+
     for message in messages:
         message_data = get_message_data(message, user, data_model)
+
         if message_data is not None:
 
             typing_data = typing_message(user['user_id'])
@@ -127,3 +136,6 @@ def call_user_API(user_id):
             params={ 'access_token': global_token} )
     data = json.loads(res.text)
     return data
+
+
+
