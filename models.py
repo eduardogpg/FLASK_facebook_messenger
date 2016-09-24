@@ -1,50 +1,34 @@
-from pymongo import MongoClient, ASCENDING
+from pymongo import MongoClient, ASCENDING, DESCENDING
 
 client = MongoClient('localhost', 27017)
 db = client.bot_codigo_facilito
 
-class User(object):
+class UserModel(object):
 	@staticmethod
-	def get_new_preference():
-		data = {'completed': False}
-		return data
-
+	def find(**kwargs):
+		return db.users.find_one( kwargs )
+		 
 	@staticmethod
-	def new_preference():
-		preference = []
-		preference.append( User.get_new_preference() )
-		preference.append( User.get_new_preference() )
-		return preference
-
-	@classmethod
-	def find(cls, **kwargs):
-		user = db.users.find_one( kwargs )
-		return user	
-
-	@classmethod
-	def new(cls, **kwargs):
-		data = {}
-		for key, value in kwargs.iteritems():
-			data[key] = value
-		return data
-
-	@classmethod
-	def save(cls, data):
-		db.users.save(data)
-		return data
-
-	@classmethod
-	def remove(cls, **kwargs):
-		db.users.remove(kwargs)
+	def new(**kwargs):
+		return { key:value for key, value in kwargs.iteritems()  }
 		
-class Preference(object):
-	@classmethod
-	def get_first(cls):
-		#return db.preferences.find().sort("order").limit(1)
-		return db.preferences.find_one()
+	@staticmethod
+	def save(data):
+		print "Data eduardo"
+		db.users.save(data)
+		
+class MessageModel(object):
+	cls_object = None
 
-class Message(object):
-	@classmethod
-	def find(cls, **kwargs):
-		objects = db.common_messages.find(kwargs).sort("order", ASCENDING)
-		return objects
+	@staticmethod
+	def find(**kwargs):
+		return db.common_messages.find(kwargs)
+
+	@staticmethod
+	def order_by(model, field = '', asc = True):
+		type_sort = ASCENDING if asc else DESCENDING
+		return model.sort(field, type_sort)
+
+
+
+

@@ -3,16 +3,14 @@
 import json
 import requests
 import threading
-from time import sleep
 
-from models import User as UserModel
-from models import Preference as PreferenceModel
-from models import Message as MessageModel
+from models import UserModel
+from models import MessageModel
 
-from structs import typing_message
-from structs import create_quick_replies_message
-from structs import create_text_message
-from structs import create_quick_replies_location
+from data_struct import create_quick_replies_location
+from data_struct import create_quick_replies_message
+from data_struct import create_typing_message
+from data_struct import create_text_message
 
 global_token = ''
 
@@ -31,12 +29,8 @@ def handler_actions(user_id, message):
     user = UserModel.find(user_id = user_id)
     validate_quick_replies(user, message)
 
-    """
-    if user is not None or user is not :
-        validate_quick_replies(user, message)
-    elif user is None:
-        first_steps(user_id)
-    """
+    if user is None:
+       first_steps(user_id)
 
 def validate_quick_replies(user, message):
     quick_replie = message.get('quick_reply', {})
@@ -52,31 +46,30 @@ def set_user_attachment(attachments, user):
     for attachment in attachments:
         if attachment['type'] == 'location':
             coordinates = attachment['payload']['coordinates']
-
-            set_user_location(coordinates, user)
-            send_message_location(coordinates['lat'], coordinates['long'], user)
+            lat, lng = get_location(coordinates)
+            send_message_location(lat, lng, user)
 
 def set_user_location(coordinates, user):
-    user['lat'] = coordinates['lat']
-    user['long'] = coordinates['long']
-    UserModel.save(user)
+    if user is not None:
+        user['lat'], user['long'] = coordinates['lat'], coordinates['long']
+        UserModel.save(user)
 
-def send_message_location(lat, log, user):
+def get_location(coordinates):
+    return coordinates['lat'], coordinates['long']
+
+def send_message_location(lat, lng, user):
     res = requests.get('http://api.geonames.org/findNearByWeatherJSON',
-                params={ 'lat': str(lat), 'lng': str(log), 'username': 'eduardo_gpg'}   )
+                params={ 'lat': lat, 'lng': lng, 'username': 'eduardo_gpg'}   )
 
-    print "Entro aqui "
     if res.status_code == 200:
         res = json.loads(res.text)
-
-        print "El estatues es 200"
 
         city = res['weatherObservation']['stationName']
         temperature = res['weatherObservation']['temperature']
         data_model = {'city': city, 'temperature': temperature }
+        
         send_loop_messages(user, 'specific', 'temperature', data_model)
         
-
 def set_replies_user(quick_replie, user):
     pass
 
@@ -90,25 +83,24 @@ def validate_actions(user_id):
     call_send_API(message_data)
 
 def first_steps(user_id):
-    data = call_user_API( user_id) 
-    user = UserModel.new( first_name = data['first_name'], last_name = data['last_name'], gender = data['gender'], user_id = user_id)
+    data = call_user_API(user_id) 
+    user = UserModel.new(   first_name = data['first_name'], last_name = data['last_name'],
+                            gender = data['gender'], user_id = user_id)
+    
     UserModel.save(user)
     send_loop_messages(user, 'common', 'welcome')
 
 def send_loop_messages(user, type_message='', context = '', data_model = {} ):
     messages = MessageModel.find(type = type_message,  context = context)
 
-
     for message in messages:
+        
         message_data = get_message_data(message, user, data_model)
+        typing_data = create_typing_message(user)
 
-        if message_data is not None:
+        call_send_API( typing_data )
+        call_send_API( message_data)
 
-            typing_data = typing_message(user['user_id'])
-            call_send_API( typing_data )
-            call_send_API( message_data)
-
-            sleep(1)
 
 def get_message_data(message, user, data_model):
     type_message = message.get('type_message', '')

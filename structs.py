@@ -33,7 +33,7 @@ def item_quick_replie(title, payload):
 		  }
     return data
 
-def quick_replies_location(title, recipient_id):
+def replie_location(title, recipient_id):
     message_data = {
         'recipient': {'id': recipient_id},
         'message': {    
@@ -46,23 +46,3 @@ def quick_replies_location(title, recipient_id):
         }
     }
     return message_data
-
-""" Funciones Para crear las estructuras """
-def create_quick_replies_message(data, user):
-    replies = []
-    for replie in data['replies']:
-        item = item_quick_replie(replie['title'], replie['payload'])
-        replies.append( item  )
-    
-    return quick_replie_message( user['user_id'], data['content'], replies)
-
-def create_text_message(data, user, data_model):
-    message = data.get('content', '')
-
-    if 'format' in data:
-        message = message.format(**data_model) if 'data_model' in data else message.format(**user)
-    return text_message(user['user_id'], message)
-
-def create_quick_replies_location(data, user):
-    return quick_replies_location(data['title'], user['user_id'])
-
