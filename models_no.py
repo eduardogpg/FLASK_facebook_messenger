@@ -3,7 +3,11 @@ from pymongo import MongoClient, ASCENDING, DESCENDING
 client = MongoClient('localhost', 27017)
 db = client.bot_codigo_facilito
 
+
 class UserModel(object):
+	def __init__(self, database):
+		self.db = database
+		
 	@staticmethod
 	def find(**kwargs):
 		return db.users.find_one( kwargs )
@@ -14,7 +18,6 @@ class UserModel(object):
 		
 	@staticmethod
 	def save(data):
-		print "Data eduardo"
 		db.users.save(data)
 		
 class MessageModel(object):

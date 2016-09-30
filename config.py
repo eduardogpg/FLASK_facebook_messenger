@@ -1,9 +1,8 @@
 import os
 
 class Config(object):
-	SECRET_KEY = 'my_secret_key'
-	VERIFY_TOKEN = 'my_scret_token'
-	PAGE_ACCESS_TOKEN = 'EAAPyXlO5u5UBAAzMMTUc5YF4CYTliDiOmQu9hmtcqLJyZAzoje9iZAHA7SHWQigR2qV4WPG6b48kawplb4cWDDb1UcKhBMKpVADeYtD1abPwKZASM7yDi3jB0UhBcqBzS0xo9lqmnFGRy0U6vLnOZAIpF18NHcYt9IHJZARgx8wZDZD'
+	SECRET_KEY = os.environ.get('SECRET_KEYS') or 'my_secret_key'
+	PAGE_ACCESS_TOKEN = os.environ.get('PAGE_ACCESS_TOKEN') or 'EAASJNooj21kBAOuozwFuhW99MFQ0VHktGxsY7wrtLw4k8PZBfOBW1nRXWRZBUi9e09dZBSq6ee8zh51zmTOULOZBmnziqT1XZCsSxtNcn1WSkNyBvv0ZCOQQRcwfsUytSkTgp5aGPCYXsjLXafHSA7ZBGg2kfiMDucfbp6ZBmMfUGwZDZD'
 
 class DevelopmentConfig(Config):
 	DEBUG = True	

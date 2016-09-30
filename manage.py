@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, request
+from flask import Flask
+from flask import request
+
 from config import DevelopmentConfig
 from handler import received_message
 
@@ -18,11 +20,12 @@ app.config.from_object(DevelopmentConfig)
 def index():
 	return 'Welcome to Mrs. Bot with Flask!'
 
+
 @app.route('/webhook', methods=['GET', 'POST'])
 def webhook():
 	if request.method == 'GET':
 		verify_token = request.args.get('hub.verify_token', '')
-		if verify_token == app.config['VERIFY_TOKEN']:
+		if verify_token == app.config['SECRET_KEY']:
 			return request.args.get('hub.challenge', '')
 		return 'Error, wrong validation token'
 	

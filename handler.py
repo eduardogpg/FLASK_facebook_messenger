@@ -39,8 +39,6 @@ def validate_quick_replies(user, message):
     if quick_replie or attachments:
         if attachments:
             set_user_attachment(attachments, user)
-        elif quick_replie:
-            set_replies_user(quick_replie, user)
 
 def set_user_attachment(attachments, user):
     for attachment in attachments:
@@ -70,12 +68,6 @@ def send_message_location(lat, lng, user):
         
         send_loop_messages(user, 'specific', 'temperature', data_model)
         
-def set_replies_user(quick_replie, user):
-    pass
-
-def delete_user(user_id):
-    UserModel.remove(user_id = user_id)
-    print "Some message"
 
 def validate_actions(user_id):
     message = 'Es bueno tenerte de regreso {name}'.format(name = user['first_name'])
@@ -84,9 +76,7 @@ def validate_actions(user_id):
 
 def first_steps(user_id):
     data = call_user_API(user_id) 
-    user = UserModel.new(   first_name = data['first_name'], last_name = data['last_name'],
-                            gender = data['gender'], user_id = user_id)
-    
+    user = UserModel.new( first_name = data['first_name'], last_name = data['last_name'], gender = data['gender'], user_id = user_id)
     UserModel.save(user)
     send_loop_messages(user, 'common', 'welcome')
 
@@ -94,7 +84,6 @@ def send_loop_messages(user, type_message='', context = '', data_model = {} ):
     messages = MessageModel.find(type = type_message,  context = context)
 
     for message in messages:
-        
         message_data = get_message_data(message, user, data_model)
         typing_data = create_typing_message(user)
 
