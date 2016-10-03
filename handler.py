@@ -96,10 +96,8 @@ def get_message_data(message, user, data_model):
     
     if type_message == 'text_message':
         return create_text_message(message, user, data_model)
-    
     elif type_message ==  'quick_replies':
         return create_quick_replies_message(message, user)
-    
     elif type_message == 'quick_replies_location':
         return create_quick_replies_location(message, user)
 

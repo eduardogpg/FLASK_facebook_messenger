@@ -4,7 +4,6 @@ from structs import quick_replie_message
 from structs import item_quick_replie
 from structs import replie_location
 
-
 """ Funciones Para crear las estructuras """
 def create_quick_replies_message(data, user):
     replies = []

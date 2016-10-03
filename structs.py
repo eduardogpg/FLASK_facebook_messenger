@@ -26,12 +26,12 @@ def quick_replie_message(recipient_id, title, replies ):
     return message_data
 
 def item_quick_replie(title, payload):
-    data =  {
+    item =  {
 			"content_type":"text",
 			"title": title,
 			"payload": payload
 		  }
-    return data
+    return item
 
 def replie_location(title, recipient_id):
     message_data = {

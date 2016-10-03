@@ -20,7 +20,6 @@ app.config.from_object(DevelopmentConfig)
 def index():
 	return 'Welcome to Mrs. Bot with Flask!'
 
-
 @app.route('/webhook', methods=['GET', 'POST'])
 def webhook():
 	if request.method == 'GET':

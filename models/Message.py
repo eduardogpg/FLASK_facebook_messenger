@@ -1,9 +1,5 @@
+from model import Model
 
-class Message(object):
-	def __init__(self, database):
-		self.database = database
-
-	@classmethod
-	def find(cls, **kwargs):
-		return cls.db.common_messages.find(kwargs)
-
+class Message(Model):
+	def __init__(self, database, collection ):
+		super(Message, self).__init__(database, collection)
