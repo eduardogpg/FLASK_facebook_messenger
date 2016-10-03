@@ -4,8 +4,17 @@ from message import Message
 import os
 import json
 
-def load_message_data(model):
-	with open('models/data/messages.json') as data:
+def pluralize_class(instance):
+	return "{class_name}s".format( class_name = instance.__class__.__name__)
+
+def get_path():
+	return os.path.dirname(os.path.realpath(__file__))
+
+def load_message_data(model, folder = 'data'):
+	path = "{path}/{folder}/{file}.json".format(file = pluralize_class(model), path = get_path(), folder = folder )
+	model.delete_collection()
+
+	with open(path) as data:
 		list_json_data = json.load(data)
 		for json_data in list_json_data:
 			model.save(json_data)
@@ -21,4 +30,5 @@ database = client.bot_facilito
 UserModel = User(database = database, collection = USER_COLLECTION)
 MessageModel = Message(database = database, collection = MESSAGE_COLLECTION)
 
+UserModel.delete_collection()
 load_message_data(MessageModel)

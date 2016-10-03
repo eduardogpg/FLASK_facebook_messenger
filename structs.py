@@ -27,9 +27,9 @@ def quick_replie_message(recipient_id, title, replies ):
 
 def item_quick_replie(title, payload):
     item =  {
-			"content_type":"text",
-			"title": title,
-			"payload": payload
+			'content_type':'text',
+			'title': title,
+			'payload': payload
 		  }
     return item
 
@@ -38,11 +38,25 @@ def replie_location(title, recipient_id):
         'recipient': {'id': recipient_id},
         'message': {    
             'text': title,
-            "quick_replies":[
+            'quick_replies':[
               {
-                "content_type":"location",
+                'content_type':'location',
               }
             ]
         }
     }
+    return message_data
+
+def image_message(recipient_id, url):
+    message_data = {
+        "recipient":{ "id":recipient_id},
+        "message":{
+        "attachment":{
+            "type":"image",
+                "payload":{
+                    "url":"http://i.imgur.com/SOFXhd6.jpg"
+                }
+            }
+        }
+    }   
     return message_data

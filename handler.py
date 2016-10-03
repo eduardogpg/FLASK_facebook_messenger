@@ -10,6 +10,7 @@ from models import MessageModel
 from data_struct import create_quick_replies_location
 from data_struct import create_quick_replies_message
 from data_struct import create_typing_message
+from data_struct import create_image_message
 from data_struct import create_text_message
 
 global_token = ''
@@ -39,6 +40,8 @@ def validate_quick_replies(user, message):
     if quick_replie or attachments:
         if attachments:
             set_user_attachment(attachments, user)
+        elif quick_replie:
+            set_user_quick_replie(quick_replie, user)
 
 def set_user_attachment(attachments, user):
     for attachment in attachments:
@@ -46,6 +49,13 @@ def set_user_attachment(attachments, user):
             coordinates = attachment['payload']['coordinates']
             lat, lng = get_location(coordinates)
             send_message_location(lat, lng, user)
+
+def set_user_quick_replie(quick_replie, user):
+    if user is not None:
+        payload = quick_replie['payload']
+        user['preference'] = payload
+        UserModel.save(user)
+        send_loop_messages(user, type_message = 'quick_replies', context = payload )
 
 def set_user_location(coordinates, user):
     if user is not None:
@@ -68,7 +78,6 @@ def send_message_location(lat, lng, user):
         
         send_loop_messages(user, 'specific', 'temperature', data_model)
         
-
 def validate_actions(user_id):
     message = 'Es bueno tenerte de regreso {name}'.format(name = user['first_name'])
     message_data = text_message(user_id, message)
@@ -81,7 +90,7 @@ def first_steps(user_id):
     send_loop_messages(user, 'common', 'welcome')
 
 def send_loop_messages(user, type_message='', context = '', data_model = {} ):
-    messages = MessageModel.find(type = type_message,  context = context)
+    messages = MessageModel.find_all(type = type_message, context = context)
 
     for message in messages:
         message_data = get_message_data(message, user, data_model)
@@ -90,16 +99,20 @@ def send_loop_messages(user, type_message='', context = '', data_model = {} ):
         call_send_API( typing_data )
         call_send_API( message_data)
 
-
 def get_message_data(message, user, data_model):
     type_message = message.get('type_message', '')
     
     if type_message == 'text_message':
         return create_text_message(message, user, data_model)
+    
     elif type_message ==  'quick_replies':
         return create_quick_replies_message(message, user)
+    
     elif type_message == 'quick_replies_location':
         return create_quick_replies_location(message, user)
+    
+    elif type_message == 'image':
+        return create_image_message(message, user)
 
 def call_send_API(data):
     res = requests.post('https://graph.facebook.com/v2.6/me/messages',
@@ -115,6 +128,4 @@ def call_user_API(user_id):
             params={ 'access_token': global_token} )
     data = json.loads(res.text)
     return data
-
-
 

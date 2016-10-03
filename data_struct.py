@@ -1,10 +1,15 @@
 from structs import text_message
+from structs import image_message
 from structs import typing_message
-from structs import quick_replie_message
-from structs import item_quick_replie
 from structs import replie_location
+from structs import item_quick_replie
+from structs import quick_replie_message
+
 
 """ Funciones Para crear las estructuras """
+def create_image_message(data, user):
+    return image_message( user['user_id'], "https://petersapparel.com/img/shirt.png")
+
 def create_quick_replies_message(data, user):
     replies = []
     for replie in data['replies']:

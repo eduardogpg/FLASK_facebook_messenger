@@ -26,26 +26,34 @@
 	},
 	{
 		"title" : "obtener preferencias",
-		"content" : "¿Cúal es tu color favorito?",
+		"content" : "¿Cúal es hoobie favorito?",
 		"context" : "welcome",
-		"type" : "not common",
+		"type" : "common",
 		"order" : 4,
 		"type_message" : "quick_replies",
 		"replies" : [
 			{
-				"title" : "Red",
-				"payload" : "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+				"title" : "Ver Peliculas",
+				"payload" : "WATCH_MOVIE"
 			},
 			{
-				"title" : "Blue",
-				"payload" : "DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_BLUE"
+				"title" : "Escuchar Musica",
+				"payload" : "LISTEN_MUSIC"
+			},
+			{
+				"title" : "Ambos",
+				"payload" : "BOTH_MOVIES_AND_MUSIC"
+			},
+			{
+				"title" : "Ninguno",
+				"payload" : "Ninguno"
 			}
 		]
 	},
 	{
 		"title" : "Ubicación",
 		"content" : "¿Cual es tu locación?",
-		"type" : "common",
+		"type" : "not_common",
 		"context" : "welcome",
 		"order" : 5,
 		"type_message" : "quick_replies_location"
@@ -58,5 +66,49 @@
 		"order" : 1,
 		"format" : true,
 		"type_message" : "text_message"
+	},
+	{
+		"title" : "LISTEN_MUSIC",
+		"content" : "¿Qué te parece esta imagen?",
+		"type" : "quick_replies",
+		"context" : "LISTEN_MUSIC",
+		"order" : 1,
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "LISTEN_MUSIC",
+		"content" : "¿Ya viste esta nueva imagen?",
+		"type" : "quick_replies",
+		"context" : "LISTEN_MUSIC",
+		"order" : 2,
+		"type_message" : "image",
+		"search" : true
+	},
+	{
+		"title" : "Ninguno",
+		"content" : "¿Cómo es posible eso?🙄",
+		"type" : "quick_replies",
+		"context" : "Ninguno",
+		"order" : 1,
+		"type_message" : "text_message",
+		"search" : true
+	},
+	{
+		"title" : "Ninguno",
+		"content" : "Ya ni modos,¿entonces de que podemos platicar?🐤",
+		"type" : "quick_replies",
+		"context" : "Ninguno",
+		"order" : 2,
+		"type_message" : "text_message",
+		"search" : true
+	},
+	{
+		"title" : "Ninguno",
+		"content" : "Recuerda que solo estoy programado para hablar de esos temas!",
+		"type" : "quick_replies",
+		"context" : "Ninguno",
+		"order" : 3,
+		"type_message" : "text_message",
+		"search" : true
 	}
 ]
