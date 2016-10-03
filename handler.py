@@ -32,6 +32,17 @@ def handler_actions(user_id, message):
 
     if user is None:
        first_steps(user_id)
+    else:
+        try_send_message(user, message)
+
+def try_send_message(user, message):
+    if 'ayuda' in message['text']:
+        send_loop_messages(user, type_message = 'help', context = 'help')
+    elif 'cambio de preferencias' in message['text']:
+        change_preference(user)
+
+def change_preference(user):
+    send_single_message(user, identifier = 'set_preference')
 
 def validate_quick_replies(user, message):
     quick_replie = message.get('quick_reply', {})
@@ -77,7 +88,7 @@ def send_message_location(lat, lng, user):
         data_model = {'city': city, 'temperature': temperature }
         
         send_loop_messages(user, 'specific', 'temperature', data_model)
-        
+
 def validate_actions(user_id):
     message = 'Es bueno tenerte de regreso {name}'.format(name = user['first_name'])
     message_data = text_message(user_id, message)
@@ -93,11 +104,18 @@ def send_loop_messages(user, type_message='', context = '', data_model = {} ):
     messages = MessageModel.find_all(type = type_message, context = context)
 
     for message in messages:
-        message_data = get_message_data(message, user, data_model)
-        typing_data = create_typing_message(user)
+        send_message(message, user, data_model)
 
-        call_send_API( typing_data )
-        call_send_API( message_data)
+def send_single_message(user, identifier = ''):
+    message = MessageModel.find(identifier = identifier)
+    send_message(message, user)
+
+def send_message(message, user, data_model = {} ):
+    message_data = get_message_data(message, user, data_model)
+    typing_data = create_typing_message(user)
+
+    call_send_API( typing_data )
+    call_send_API( message_data)
 
 def get_message_data(message, user, data_model):
     type_message = message.get('type_message', '')

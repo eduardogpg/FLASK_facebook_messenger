@@ -30,6 +30,7 @@
 		"context" : "welcome",
 		"type" : "common",
 		"order" : 4,
+		"identifier" : "set_preference",
 		"type_message" : "quick_replies",
 		"replies" : [
 			{
@@ -90,8 +91,7 @@
 		"type" : "quick_replies",
 		"context" : "Ninguno",
 		"order" : 1,
-		"type_message" : "text_message",
-		"search" : true
+		"type_message" : "text_message"
 	},
 	{
 		"title" : "Ninguno",
@@ -99,8 +99,7 @@
 		"type" : "quick_replies",
 		"context" : "Ninguno",
 		"order" : 2,
-		"type_message" : "text_message",
-		"search" : true
+		"type_message" : "text_message"
 	},
 	{
 		"title" : "Ninguno",
@@ -108,7 +107,22 @@
 		"type" : "quick_replies",
 		"context" : "Ninguno",
 		"order" : 3,
-		"type_message" : "text_message",
-		"search" : true
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "Ayuda",
+		"content" : "Mi nombre es botFacilito!",
+		"type" : "help",
+		"context" : "help",
+		"order" : 1,
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "Ayuda",
+		"content" : "Si necesitas cambiar de preferencias solo escribe 'cambio de preferencias' :D ",
+		"type" : "help",
+		"context" : "help",
+		"order" : 2,
+		"type_message" : "text_message"
 	}
 ]
