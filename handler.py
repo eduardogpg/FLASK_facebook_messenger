@@ -4,6 +4,8 @@ import json
 import requests
 import datetime
 import re
+import threading
+import time
 
 from models import UserModel
 from models import MessageModel
@@ -57,6 +59,7 @@ def try_send_message(user, message):
     
     elif 'eggs' in message['text']:
         send_loop_messages(user, type_message = 'eggs', context = 'eggs')
+        programming_message(user)
 
 def change_preference(user):
     send_single_message(user, identifier = 'set_preference')
@@ -181,6 +184,13 @@ def call_geosname_API(lat, lng):
         city = res['weatherObservation']['stationName']
         temperature = res['weatherObservation']['temperature']
         return {'city': city, 'temperature': temperature }
-        
 
+def programming_message(user):
+    message = threading.Thread( name='send_remainer',
+                                target= send_remainer,
+                                args=(user, 'Reminder', 'configuraciones'))
+    message.start()
     
+def send_remainer(user, type_message='', context = '', data_model = {} ):
+    time.sleep(20)
+    send_loop_messages(user, type_message, context, data_model)
