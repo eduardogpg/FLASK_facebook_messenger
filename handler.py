@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 import json
 import requests
-import threading
 import datetime
+import re
 
 from models import UserModel
 from models import MessageModel
@@ -14,6 +14,7 @@ from data_struct import create_typing_message
 from data_struct import create_image_message
 from data_struct import create_text_message
 from data_struct import create_greeting_message
+from data_struct import create_template_message
 
 global_token = ''
 global_username = ''
@@ -49,13 +50,13 @@ def first_steps(user_id):
 
 def try_send_message(user, message):
     validate_quick_replies(user, message) 
-
-    """
+    print("El mensaje de texto es ", message['text'])
+    
     if 'ayuda' in message['text']:
         send_loop_messages(user, type_message = 'help', context = 'help')
-    elif 'cambio de preferencias' in message['text']:
-        change_preference(user)
-    """
+    
+    elif 'eggs' in message['text']:
+        send_loop_messages(user, type_message = 'eggs', context = 'eggs')
 
 def change_preference(user):
     send_single_message(user, identifier = 'set_preference')
@@ -118,38 +119,42 @@ def validate_actions(user_id):
     call_send_API(message_data)
 
 def send_loop_messages(user, type_message='', context = '', data_model = {} ):
-    messages = MessageModel.find_all(type = type_message, context = context)
-
-    print MessageModel.get_number_messages()
+    messages = MessageModel.find_by_order(type = type_message, context = context)
     
+    print type_message
+    print messages.count()
+
     for message in messages:
-        send_message(message, user, data_model)
+        send_message(user, message, data_model)
 
 def send_single_message(user, identifier = ''):
     message = MessageModel.find(identifier = identifier)
     send_message(message, user)
 
-def send_message(message, user, data_model = {} ):
-    message_data = get_message_data(message, user, data_model)
+def send_message(user, message, data_model = {} ):
+    message_data = get_message_data(user, message, data_model)
     typing_data = create_typing_message(user)
 
     call_send_API( typing_data )
     call_send_API( message_data)
 
-def get_message_data(message, user, data_model):
+def get_message_data(user, message, data_model):
     type_message = message.get('type_message', '')
     
     if type_message == 'text_message':
-        return create_text_message(message, user, data_model)
+        return create_text_message(user, message, data_model)
     
     elif type_message ==  'quick_replies':
-        return create_quick_replies_message(message, user)
+        return create_quick_replies_message(user, message)
     
     elif type_message == 'quick_replies_location':
-        return create_quick_replies_location(message, user)
+        return create_quick_replies_location(user, message)
     
     elif type_message == 'image':
-        return create_image_message(message, user)
+        return create_image_message(user, message)
+    
+    elif type_message == 'template':
+        return create_template_message(user, message)
 
 def call_send_API(data):
     res = requests.post('https://graph.facebook.com/v2.6/me/messages',

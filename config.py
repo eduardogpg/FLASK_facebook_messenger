@@ -7,3 +7,8 @@ class Config(object):
 
 class DevelopmentConfig(Config):
 	DEBUG = True	
+
+"""
+https://developers.facebook.com/docs/graph-api/reference/user/picture/
+http://findfacebookid.com/
+"""

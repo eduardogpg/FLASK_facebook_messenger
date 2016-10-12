@@ -99,7 +99,7 @@
 	},
 	{
 		"title" : "Ayuda",
-		"content" : "Mi nombre es botFacilito!",
+		"content" : "Si necesitas cambiar de preferencias solo escribe 'cambio de preferencias' :D ",
 		"type" : "help",
 		"context" : "help",
 		"order" : 1,
@@ -107,7 +107,7 @@
 	},
 	{
 		"title" : "Ayuda",
-		"content" : "Si necesitas cambiar de preferencias solo escribe 'cambio de preferencias' :D ",
+		"content" : "Si quieres contactar al desarrollado de este bot solo escribe 'eggs' ",
 		"type" : "help",
 		"context" : "help",
 		"order" : 2,
@@ -128,6 +128,36 @@
 		"context" : "configuraciones",
 		"order" : 1,
 		"type_message" : "text_message"
+	},
+	{
+		"title" : "Conctato con el desarrollador",
+		"content" : "Te recuerdo que puedes cambiar las configuraciones escribiendo 'Mis configuraciones' :) ",
+		"type" : "eggs",
+		"context" : "eggs",
+		"order" : 1,
+		"type_message" : "template",
+		"template_type": "generic",
+		"elements": [
+								{
+			            "title": "Eduardo García",
+			            "subtitle": "Redes sociales",
+			            "item_url": "https://codigofacilito.com/usuarios/8639",
+			            "image_url": "http://graph.facebook.com/100000141857371/picture?type=large",
+			            "buttons": [
+				            {
+				              "type": "web_url",
+				              "url": "https://www.facebook.com/Eduardo.Ismael.GP",
+				              "title": "Facebook"
+				            },
+				            {
+				              "type": "web_url",
+				              "url": "https://twitter.com/eduardo_gpg",
+				              "title": "Twitter"
+				            }
+				          ]
+				        }
+          	]
 	}
+
 
 ]
