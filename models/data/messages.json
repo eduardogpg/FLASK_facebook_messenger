@@ -120,6 +120,14 @@
 		"context" : "location",
 		"order" : 1,
 		"type_message" : "text_message"
+	},
+	{
+		"title" : "Recordatorio de configuraciones",
+		"content" : "Te recuerdo que puedes cambiar las configuraciones escribiendo 'Mis configuraciones' :) ",
+		"type" : "Reminder",
+		"context" : "configuraciones",
+		"order" : 1,
+		"type_message" : "text_message"
 	}
 
 ]

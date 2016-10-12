@@ -56,7 +56,7 @@ def try_send_message(user, message):
     elif 'cambio de preferencias' in message['text']:
         change_preference(user)
     """
-    
+
 def change_preference(user):
     send_single_message(user, identifier = 'set_preference')
 
@@ -119,6 +119,8 @@ def validate_actions(user_id):
 
 def send_loop_messages(user, type_message='', context = '', data_model = {} ):
     messages = MessageModel.find_all(type = type_message, context = context)
+
+    print MessageModel.get_number_messages()
     
     for message in messages:
         send_message(message, user, data_model)
