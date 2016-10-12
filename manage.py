@@ -6,11 +6,12 @@ from flask import request
 
 from config import DevelopmentConfig
 from handler import received_message
+from handler import set_greeting_message
 
 import json
 
 __author__ = 'Eduardo Ismael García Pérez'
-__lastupdated__ = '2016 September 23'
+__lastupdated__ = '2016 October 06'
 
 
 app = Flask(__name__)
@@ -18,7 +19,7 @@ app.config.from_object(DevelopmentConfig)
 
 @app.route('/', methods=['GET'])
 def index():
-	return 'Welcome to Mrs. Bot with Flask!'
+	return 'Welcome to Mrs. Bot with Flask! Eduardo'
 
 @app.route('/webhook', methods=['GET', 'POST'])
 def webhook():
@@ -35,10 +36,11 @@ def webhook():
 		for page_entry in data['entry']:
 			for message_event in page_entry['messaging']:
 				if "message" in message_event:
-					received_message(message_event, app.config['PAGE_ACCESS_TOKEN'])
+					received_message(message_event, app.config['PAGE_ACCESS_TOKEN'], app.config['USER_GEOSNAME'])
 						
 		return "ok"
 
 if __name__ == '__main__':
+	set_greeting_message()
 	app.run(port = 8000)
 

@@ -32,3 +32,4 @@ MessageModel = Message(database = database, collection = MESSAGE_COLLECTION)
 
 UserModel.delete_collection()
 load_message_data(MessageModel)
+

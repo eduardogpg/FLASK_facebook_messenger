@@ -17,8 +17,8 @@
 		"type_message" : "text_message"
 	},
 	{
-		"title" : "Obtener info",
-		"content" : "Antes de comenzar necesito recabar cierta información, espero no te moleste",
+		"title" : "Obtener información",
+		"content" : "Antes de comenzar necesito recabar cierta información, espero no te moleste!",
 		"context" : "welcome",
 		"type" : "common",
 		"order" : 3,
@@ -26,7 +26,7 @@
 	},
 	{
 		"title" : "obtener preferencias",
-		"content" : "¿Cúal es hoobie favorito?",
+		"content" : "De que tema te gustaria que hablaramos?",
 		"context" : "welcome",
 		"type" : "common",
 		"order" : 4,
@@ -34,12 +34,8 @@
 		"type_message" : "quick_replies",
 		"replies" : [
 			{
-				"title" : "Ver Peliculas",
-				"payload" : "WATCH_MOVIE"
-			},
-			{
-				"title" : "Escuchar Musica",
-				"payload" : "LISTEN_MUSIC"
+				"title" : "El clima",
+				"payload" : "WEATHER"
 			},
 			{
 				"title" : "Ambos",
@@ -52,38 +48,46 @@
 		]
 	},
 	{
-		"title" : "Ubicación",
-		"content" : "¿Cual es tu locación?",
-		"type" : "not_common",
-		"context" : "welcome",
-		"order" : 5,
-		"type_message" : "quick_replies_location"
-	},
-	{
 		"title" : "Clima info",
 		"content" : "Actualmente {city} se encuentra a {temperature} grados centigrados.",
 		"context" : "temperature",
 		"type" : "specific",
 		"order" : 1,
 		"format" : true,
+		"data_model": true,
 		"type_message" : "text_message"
 	},
 	{
-		"title" : "LISTEN_MUSIC",
-		"content" : "¿Qué te parece esta imagen?",
+		"title" : "WEATHER",
+		"content" : "El clima es un buen tema para comenzar!",
 		"type" : "quick_replies",
-		"context" : "LISTEN_MUSIC",
+		"context" : "WEATHER",
 		"order" : 1,
 		"type_message" : "text_message"
 	},
 	{
-		"title" : "LISTEN_MUSIC",
-		"content" : "¿Ya viste esta nueva imagen?",
+		"title" : "WEATHER",
+		"content" : "Te comento que puedo indicarte el clima siempre y cuando me pases tu localización",
 		"type" : "quick_replies",
-		"context" : "LISTEN_MUSIC",
+		"context" : "WEATHER",
 		"order" : 2,
-		"type_message" : "image",
-		"search" : true
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "WEATHER",
+		"content" : "Hagamos una prueba para ver como funciona!",
+		"type" : "quick_replies",
+		"context" : "WEATHER",
+		"order" : 3,
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "WEATHER",
+		"content" : "Selecciona una locación!",
+		"type" : "quick_replies",
+		"context" : "WEATHER",
+		"order" : 4,
+		"type_message" : "quick_replies_location"
 	},
 	{
 		"title" : "Ninguno",
@@ -91,22 +95,6 @@
 		"type" : "quick_replies",
 		"context" : "Ninguno",
 		"order" : 1,
-		"type_message" : "text_message"
-	},
-	{
-		"title" : "Ninguno",
-		"content" : "Ya ni modos,¿entonces de que podemos platicar?🐤",
-		"type" : "quick_replies",
-		"context" : "Ninguno",
-		"order" : 2,
-		"type_message" : "text_message"
-	},
-	{
-		"title" : "Ninguno",
-		"content" : "Recuerda que solo estoy programado para hablar de esos temas!",
-		"type" : "quick_replies",
-		"context" : "Ninguno",
-		"order" : 3,
 		"type_message" : "text_message"
 	},
 	{
@@ -124,5 +112,14 @@
 		"context" : "help",
 		"order" : 2,
 		"type_message" : "text_message"
+	},
+	{
+		"title" : "Clima completado",
+		"content" : "Ahora que ya sabes como funciona el clima en este bot, puedes hacerlo las veces que quieras :D",
+		"type" : "Done",
+		"context" : "location",
+		"order" : 1,
+		"type_message" : "text_message"
 	}
+
 ]

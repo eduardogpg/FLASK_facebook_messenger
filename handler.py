@@ -3,6 +3,7 @@
 import json
 import requests
 import threading
+import datetime
 
 from models import UserModel
 from models import MessageModel
@@ -12,35 +13,50 @@ from data_struct import create_quick_replies_message
 from data_struct import create_typing_message
 from data_struct import create_image_message
 from data_struct import create_text_message
+from data_struct import create_greeting_message
 
 global_token = ''
+global_username = ''
 
-def received_message(event, token):
+def set_greeting_message():
+    message = create_greeting_message()
+    call_send_API(message)
+
+def received_message(event, token, username):
     sender_id = event['sender']['id']
     recipient_id = event['recipient']['id']
     time_message = event['timestamp'] 
     message = event['message']
-    
-    global global_token
+
+    global global_token, global_username
     global_token = token
+    global_username = username
 
     handler_actions( sender_id, message)
 
 def handler_actions(user_id, message):
     user = UserModel.find(user_id = user_id)
-    validate_quick_replies(user, message)
-
     if user is None:
-       first_steps(user_id)
+        first_steps(user_id)
     else:
         try_send_message(user, message)
 
+def first_steps(user_id):
+    data = call_user_API(user_id) 
+    user = UserModel.new( first_name = data['first_name'], last_name = data['last_name'], gender = data['gender'], user_id = user_id)
+    UserModel.save(user)
+    send_loop_messages(user, 'common', 'welcome')
+
 def try_send_message(user, message):
+    validate_quick_replies(user, message) 
+
+    """
     if 'ayuda' in message['text']:
         send_loop_messages(user, type_message = 'help', context = 'help')
     elif 'cambio de preferencias' in message['text']:
         change_preference(user)
-
+    """
+    
 def change_preference(user):
     send_single_message(user, identifier = 'set_preference')
 
@@ -50,59 +66,60 @@ def validate_quick_replies(user, message):
     
     if quick_replie or attachments:
         if attachments:
-            set_user_attachment(attachments, user)
+            set_user_attachment(user, attachments)
         elif quick_replie:
             set_user_quick_replie(quick_replie, user)
 
-def set_user_attachment(attachments, user):
+def set_user_attachment(user, attachments):
     for attachment in attachments:
         if attachment['type'] == 'location':
             coordinates = attachment['payload']['coordinates']
             lat, lng = get_location(coordinates)
-            send_message_location(lat, lng, user)
+            add_user_location(user, lat, lng)
+            check_actions(user, 'location')
 
 def set_user_quick_replie(quick_replie, user):
     if user is not None:
         payload = quick_replie['payload']
-        user['preference'] = payload
+        preferences = user.get('preferences', [])
+        if not preferences or payload not in preferences:
+            preferences.append(payload)
+        
+        user['preference'] = preferences
         UserModel.save(user)
         send_loop_messages(user, type_message = 'quick_replies', context = payload )
 
-def set_user_location(coordinates, user):
-    if user is not None:
-        user['lat'], user['long'] = coordinates['lat'], coordinates['long']
+def check_actions(user, action):
+    actions = user.get('actions', [])
+    action_struct = { action: 'Done' }
+
+    if action_struct not in actions:
+        actions.append(action_struct)
+        user['actions'] = actions
         UserModel.save(user)
+        send_loop_messages(user, type_message='Done', context = action )
 
 def get_location(coordinates):
     return coordinates['lat'], coordinates['long']
 
-def send_message_location(lat, lng, user):
-    res = requests.get('http://api.geonames.org/findNearByWeatherJSON',
-                params={ 'lat': lat, 'lng': lng, 'username': 'eduardo_gpg'}   )
+def add_user_location(user, lat, lng):
+    data_model = call_geosname_API(lat, lng)
 
-    if res.status_code == 200:
-        res = json.loads(res.text)
+    locations = user.get('locations', [])
+    locations.append( {'lat': lat, 'lng': lng, 'city': data_model['city'], 'created_at': datetime.datetime.now()  } )
+    user['locations'] = locations
+    UserModel.save(user)
 
-        city = res['weatherObservation']['stationName']
-        temperature = res['weatherObservation']['temperature']
-        data_model = {'city': city, 'temperature': temperature }
+    send_loop_messages(user, 'specific', 'temperature', data_model)
         
-        send_loop_messages(user, 'specific', 'temperature', data_model)
-
 def validate_actions(user_id):
     message = 'Es bueno tenerte de regreso {name}'.format(name = user['first_name'])
     message_data = text_message(user_id, message)
     call_send_API(message_data)
 
-def first_steps(user_id):
-    data = call_user_API(user_id) 
-    user = UserModel.new( first_name = data['first_name'], last_name = data['last_name'], gender = data['gender'], user_id = user_id)
-    UserModel.save(user)
-    send_loop_messages(user, 'common', 'welcome')
-
 def send_loop_messages(user, type_message='', context = '', data_model = {} ):
     messages = MessageModel.find_all(type = type_message, context = context)
-
+    
     for message in messages:
         send_message(message, user, data_model)
 
@@ -147,3 +164,16 @@ def call_user_API(user_id):
     data = json.loads(res.text)
     return data
 
+def call_geosname_API(lat, lng):
+    res = requests.get('http://api.geonames.org/findNearByWeatherJSON', 
+        params={ 'lat': lat, 'lng': lng, 'username': global_username }   )
+
+    if res.status_code == 200:
+        res = json.loads(res.text)
+
+        city = res['weatherObservation']['stationName']
+        temperature = res['weatherObservation']['temperature']
+        return {'city': city, 'temperature': temperature }
+        
+
+    

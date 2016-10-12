@@ -2,7 +2,8 @@ import os
 
 class Config(object):
 	SECRET_KEY = os.environ.get('SECRET_KEYS') or 'my_secret_key'
-	PAGE_ACCESS_TOKEN = os.environ.get('PAGE_ACCESS_TOKEN') or 'EAAFLRYo5sXoBAKuQ5dnSYyeaQgaUAKz38B7g4eJH2iIDqSleHff1HawBjG7yETRp546QMJ7q4j54cHGoC1uiwtKzjUHpXIgCZA6zhTV7LdYIR5HSb5bPeBPmLl9qOvnuOS2Tp3DTy74ZBwy0gdMPfNmL4aMtWXurUBcgUL5QZDZD'
+	PAGE_ACCESS_TOKEN = os.environ.get('PAGE_ACCESS_TOKEN') or 'EAAZAHkkZA6qWABABWRbsvmBCaelVucgAynrAehgAbJuWAuKOLzqy1dnY0rho6rctTMzoVSilYTQY0U2SYvizwD7IDYndquBAVLsNPZCchSg4tBaRf0c81KgvZBGbBx64C0m1vxcIS8WhlaVbXgebh1ZB7rMlNZAB6OhcgNjLydCQZDZD'
+	USER_GEOSNAME = os.environ.get('USER_GEOSNAME') or 'eduardo_gpg'
 
 class DevelopmentConfig(Config):
 	DEBUG = True	

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 def text_message(recipient_id, message_text):
     message_data = {
         'recipient': {'id': recipient_id},
@@ -59,4 +58,13 @@ def image_message(recipient_id, url):
             }
         }
     }   
+    return message_data
+
+def greeting(title):
+    message_data = {
+        "setting_type": "greeting",
+        "greeting":{
+            "text": "Hi {{user_first_name}}, welcome to this bot."
+        }
+    }
     return message_data
