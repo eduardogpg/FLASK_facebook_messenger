@@ -132,29 +132,24 @@ def validate_actions(user_id):
     message_data = text_message(user_id, message)
     call_send_API(message_data)
 
-def use_decision_tree(user, message, name = "" ):
-    print "Vamos a buscar el arbol con el nombre"
-    print name + "\n\n\n\n"
-
+def use_decision_tree(user, message, name = "", completed = False):
     decision = DecisionModel.find(name = name)
 
     if decision:
         for option in decision.get('options', []):
             if option['key'] in message:
-                
+                completed = True
                 execute = option['execute']
-                print "El tipo de mensaje es "+  execute['type'] +" \n\n\n\n"
 
                 if execute['type'] == 'message':
-                    print "Vamos Enviar mensajes"
                     send_loop_messages(user, type_message = execute['type_message'] , context = execute['context'] )
-                
+
                 elif execute['type'] == 'tree_decision':
-                    print "Vamos a buscar los arboles , vamos a hacer recursivo \n\n\n\n"
                     use_decision_tree(user, message, execute['tree_decision_name'])
-    else:
-        print "Lo siento no hay nada :("
-            
+        
+        if not completed:
+            send_loop_messages(user, type_message = 'common', context = 'not_found')
+
 def send_loop_messages(user, type_message='', context = '', data_model = {} ):
     messages = MessageModel.find_by_order(type = type_message, context = context)
     
