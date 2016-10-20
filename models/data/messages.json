@@ -157,7 +157,45 @@
 				          ]
 				        }
           	]
+	},
+	{
+		"title" : "Mensaje no encontrado",
+		"content" : "Lo siento no puedo comprende lo que dices!",
+		"context" : "not_found",
+		"type" : "common",
+		"order" : 1,
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "About del bot",
+		"content" : "En teoria mi creador me dijo que era hombre, pero no estoy muy seguro",
+		"context" : "type_sex_bot",
+		"type" : "specific",
+		"order" : 1,
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "About del bot",
+		"content" : "En teoria soy hombre :P ",
+		"context" : "type_sex_bot_man",
+		"type" : "specific",
+		"order" : 1,
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "About del bot",
+		"content" : "<3 _ <3 mujeres",
+		"context" : "type_sex_bot_woman",
+		"type" : "specific",
+		"order" : 1,
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "About del bot",
+		"content" : "no, no soy un toro :P, lo siento",
+		"context" : "type_top_bot",
+		"type" : "specific",
+		"order" : 1,
+		"type_message" : "text_message"
 	}
-
-
 ]

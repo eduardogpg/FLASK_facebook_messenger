@@ -25,6 +25,8 @@ Install MogoDB
 
 ```Python
 $ brew install mongodb
+$ sudo pip install imgurpython
+
 ```
 
 

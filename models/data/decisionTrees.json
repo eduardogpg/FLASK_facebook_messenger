@@ -1,0 +1,58 @@
+[
+	{
+		"name": "bot facilito",
+		"options":[
+			{
+				"key": "sex",
+				"execute":
+					{
+						"type": "message",
+						"context" : "type_sex_bot",
+						"type_message" : "specific"
+					}
+			},
+			{
+				"key": "hombre",
+				"execute":
+					{
+						"type": "message",
+						"context" : "type_sex_bot_man",
+						"type_message" : "specific"
+					}
+			},
+			{
+				"key": "mujer",
+				"execute":
+					{
+						"type": "message",
+						"context" : "type_sex_bot_woman",
+						"type_message" : "specific"
+					}
+			},
+			{
+				"key": "eres",
+				"execute":
+					{
+						"type": "tree_decision",
+						"tree_decision_name" : "jump"
+					}
+			}
+		]
+	},
+	{
+		"name": "jump",
+		"options":[
+			{
+				"key": "animales",
+				"execute":
+					{
+						"type": "message",
+						"context" : "type_top_bot",
+						"type_message" : "specific"
+					}
+			}
+		]
+	}
+
+
+]

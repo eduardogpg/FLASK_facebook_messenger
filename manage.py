@@ -11,7 +11,7 @@ from handler import set_greeting_message
 import json
 
 __author__ = 'Eduardo Ismael García Pérez'
-__lastupdated__ = '2016 October 06'
+__lastupdated__ = '2016 October 12'
 
 
 app = Flask(__name__)
@@ -35,9 +35,13 @@ def webhook():
 			
 		for page_entry in data['entry']:
 			for message_event in page_entry['messaging']:
+				
 				if "message" in message_event:
 					received_message(message_event, app.config['PAGE_ACCESS_TOKEN'], app.config['USER_GEOSNAME'])
-						
+				
+				elif "postback" in message_event:
+					print message_event
+
 		return "ok"
 
 if __name__ == '__main__':
