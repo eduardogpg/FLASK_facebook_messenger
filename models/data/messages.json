@@ -197,5 +197,31 @@
 		"type" : "specific",
 		"order" : 1,
 		"type_message" : "text_message"
+	},
+	{
+		"title" : "About del bot",
+		"content" : "¿Qué opinas de esta imagen?",
+		"context" : "image_cat",
+		"type" : "specific",
+		"order" : 1,
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "About del bot",
+		"content" : "¿Qué opinas de esta imagen?",
+		"context" : "image_cat",
+		"type" : "specific",
+		"order" : 2,
+		"url": "https://petersapparel.com/img/shirt.png",
+		"type_message" : "image"
+	},
+	{
+		"title" : "About del bot",
+		"content" : "¿Qué opinas de esta imagen?",
+		"context" : "random_video",
+		"type" : "specific",
+		"order" : 1,
+		"url": "https://petersapparel.com/bin/clip.mp4",
+		"type_message" : "video"
 	}
 ]

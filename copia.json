@@ -30,17 +30,25 @@
 					}
 			},
 			{
-				"key": "podrías",
+				"key": "podrias",
 				"execute":
 					{
 						"type": "tree_decision",
-						"tree_decision_name" : "podrías"
+						"tree_decision_name" : "poder"
+					}
+			},
+			{
+				"key": "imagen",
+				"execute":
+					{
+						"type": "tree_decision",
+						"tree_decision_name" : "imagen"
 					}
 			}
 		]
 	},
 	{
-		"name": "podrías",
+		"name": "poder",
 		"options":[
 			{
 				"key": "imagen",
@@ -49,25 +57,10 @@
 						"type": "tree_decision",
 						"tree_decision_name" : "imagen"
 					}
-			},
-			{
-				"key": "imágenes",
-				"execute":
-					{
-						"type": "tree_decision",
-						"tree_decision_name" : "imagen"
-					}
-			},
-			{
-				"key": "vídeo",
-				"execute":
-					{
-						"type": "tree_decision",
-						"tree_decision_name" : "video"
-					}
 			}
 		]
 	},
+	
 	{
 		"name": "imagen",
 		"options":[
@@ -77,23 +70,20 @@
 					{
 						"type": "message",
 						"type_message" : "specific",
-						"context" : "image_cat"
+						"context" : "type_top_bot"
 					}
-			}
-		]
-	},
-	{
-		"name": "video",
-		"options":[
+			},
 			{
-				"key": "lo que sea",
+				"key": "perro",
 				"execute":
 					{
 						"type": "message",
 						"type_message" : "specific",
-						"context" : "random_video"
+						"context" : "type_top_bot"
 					}
 			}
 		]
 	}
+
+
 ]

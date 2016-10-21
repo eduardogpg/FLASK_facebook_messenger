@@ -46,20 +46,6 @@ def replie_location(title, recipient_id):
     }
     return message_data
 
-def image_message(recipient_id, url):
-    message_data = {
-        "recipient":{ "id":recipient_id},
-        "message":{
-        "attachment":{
-            "type":"image",
-                "payload":{
-                    "url":"http://i.imgur.com/SOFXhd6.jpg"
-                }
-            }
-        }
-    }   
-    return message_data
-
 def greeting(title):
     message_data = {
         "setting_type": "greeting",
@@ -101,3 +87,31 @@ def template_message_generic(recipient_id, elements):
         }
     } 
     return message_data 
+
+def image_message(recipient_id, url):
+    message_data = {
+        "recipient":{ "id":recipient_id},
+        "message":{
+        "attachment":{
+            "type":"image",
+                "payload":{
+                    "url":"http://i.imgur.com/SOFXhd6.jpg"
+                }
+            }
+        }
+    }   
+    return message_data
+
+def video_message(recipient_id, url):
+    message_data = {
+        "recipient":{ "id":recipient_id},
+        "message":{
+        "attachment":{
+            "type":"image",
+                "payload":{
+                    "url":"https://petersapparel.com/bin/clip.mp4"
+                }
+            }
+        }
+    }   
+    return message_data

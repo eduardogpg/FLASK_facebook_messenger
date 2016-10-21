@@ -11,13 +11,14 @@ from models import UserModel
 from models import MessageModel
 from models import DecisionModel
 
-from data_struct import create_quick_replies_location
-from data_struct import create_quick_replies_message
-from data_struct import create_typing_message
-from data_struct import create_image_message
 from data_struct import create_text_message
+from data_struct import create_image_message
+from data_struct import create_video_message
+from data_struct import create_typing_message
 from data_struct import create_greeting_message
 from data_struct import create_template_message
+from data_struct import create_quick_replies_message
+from data_struct import create_quick_replies_location
 
 global_token = ''
 global_username = ''
@@ -134,7 +135,6 @@ def validate_actions(user_id):
 
 def use_decision_tree(user, message, name = "", completed = False):
     decision = DecisionModel.find(name = name)
-
     if decision:
         for option in decision.get('options', []):
             if option['key'] in message:
@@ -163,7 +163,7 @@ def send_single_message(user, identifier = ''):
 def send_message(user, message, data_model = {} ):
     message_data = get_message_data(user, message, data_model)
     typing_data = create_typing_message(user)
-
+    
     call_send_API( typing_data )
     call_send_API( message_data)
 
@@ -181,7 +181,10 @@ def get_message_data(user, message, data_model):
     
     elif type_message == 'image':
         return create_image_message(user, message)
-    
+        
+    elif type_message == 'video':
+        return create_video_message(user, message)
+        
     elif type_message == 'template':
         return create_template_message(user, message)
 
@@ -220,3 +223,5 @@ def programming_message(user):
 def send_remainer(user, type_message='', context = '', data_model = {} ):
     time.sleep(20)
     send_loop_messages(user, type_message, context, data_model)
+
+

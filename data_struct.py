@@ -1,6 +1,8 @@
 from structs import greeting
 from structs import text_message
 from structs import image_message
+from structs import video_message
+from structs import video_message
 from structs import typing_message
 from structs import replie_location
 from structs import item_quick_replie
@@ -12,9 +14,6 @@ from structs import template_message_generic
 
 def create_greeting_message():
     return greeting('Mensaje')
-
-def create_image_message(data, user):
-    return image_message( user['user_id'], "https://petersapparel.com/img/shirt.png")
 
 def create_quick_replies_message(user, data):
     replies = [ item_quick_replie(replie['title'], replie['payload']) for replie in data['replies'] ]
@@ -44,7 +43,11 @@ def create_elements(data):
 def create_button(data):
     return button_item_template_message(data['url'], data['title'])
 
+def create_image_message(user, data):
+    return image_message( user['user_id'], data['url'])
 
+def create_video_message(user, data):
+    return video_message( user['user_id'], data['url'])
 
 
 
