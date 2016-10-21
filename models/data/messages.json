@@ -223,5 +223,25 @@
 		"order" : 1,
 		"url": "https://petersapparel.com/bin/clip.mp4",
 		"type_message" : "video"
+	},
+	{
+		"title" : "no se encontro ningún tipo de imagen",
+		"content" : "Lo siento no pude comprender lo que me dices :( lo siento",
+		"type" : "specific",
+		"context" : "default_image_tree",
+		"order" : 1,
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "About del bot",
+		"content" : "Hola {first_name} es bueno tenerte de regreso :D",
+		"context" : "return_user",
+		"type" : "specific",
+		"order" : 1,
+		"format" : true,
+		"type_message" : "text_message"
 	}
+
+	
+
 ]

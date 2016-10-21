@@ -3,6 +3,7 @@
 import json
 import requests
 import datetime
+from datetime import timedelta
 import re
 import threading
 import time
@@ -22,6 +23,7 @@ from data_struct import create_quick_replies_location
 
 global_token = ''
 global_username = ''
+MIN_TIME = 1
 
 def set_greeting_message():
     message = create_greeting_message()
@@ -51,13 +53,14 @@ def handler_actions(user_id, message):
 
 def first_steps(user_id):
     data = call_user_API(user_id) 
-    user = UserModel.new( first_name = data['first_name'], last_name = data['last_name'], gender = data['gender'], user_id = user_id)
-    UserModel.save(user)
+    user = UserModel.new( first_name = data['first_name'], last_name = data['last_name'], gender = data['gender'], user_id = user_id, last_message = datetime.datetime.now() )
+    save_user_asyn(user)
     send_loop_messages(user, 'common', 'welcome')
 
 def try_send_message(user, message):
     validate_quick_replies(user, message) 
-    
+    check_last_connection(user)
+
     if 'ayuda' in message['text']:
         send_loop_messages(user, type_message = 'help', context = 'help')
     
@@ -75,6 +78,14 @@ def decision_tree(user, message):
 
 def change_preference(user):
     send_single_message(user, identifier = 'set_preference')
+
+def check_last_connection(user):
+    now = datetime.datetime.now()
+    user['last_message'] = now
+    if not now + timedelta(minutes = 1) > now:
+        send_loop_messages(type_message="common", context = "return_user")
+
+    save_user_asyn(user)
 
 def validate_quick_replies(user, message):
     quick_replie = message.get('quick_reply', {})
@@ -102,7 +113,7 @@ def set_user_quick_replie(quick_replie, user):
             preferences.append(payload)
         
         user['preference'] = preferences
-        UserModel.save(user)
+        save_user_asyn(user)
         send_loop_messages(user, type_message = 'quick_replies', context = payload )
 
 def check_actions(user, action):
@@ -112,7 +123,7 @@ def check_actions(user, action):
     if action_struct not in actions:
         actions.append(action_struct)
         user['actions'] = actions
-        UserModel.save(user)
+        save_user_asyn(user)
         send_loop_messages(user, type_message='Done', context = action )
 
 def get_location(coordinates):
@@ -124,8 +135,8 @@ def add_user_location(user, lat, lng):
     locations = user.get('locations', [])
     locations.append( {'lat': lat, 'lng': lng, 'city': data_model['city'], 'created_at': datetime.datetime.now()  } )
     user['locations'] = locations
-    UserModel.save(user)
-
+    save_user_asyn(user)
+    
     send_loop_messages(user, 'specific', 'temperature', data_model)
         
 def validate_actions(user_id):
@@ -146,7 +157,7 @@ def use_decision_tree(user, message, name = "", completed = False):
 
                 elif execute['type'] == 'tree_decision':
                     use_decision_tree(user, message, execute['tree_decision_name'])
-        
+                
         if not completed:
             send_loop_messages(user, type_message = 'common', context = 'not_found')
 
@@ -163,7 +174,7 @@ def send_single_message(user, identifier = ''):
 def send_message(user, message, data_model = {} ):
     message_data = get_message_data(user, message, data_model)
     typing_data = create_typing_message(user)
-    
+
     call_send_API( typing_data )
     call_send_API( message_data)
 
@@ -187,6 +198,12 @@ def get_message_data(user, message, data_model):
         
     elif type_message == 'template':
         return create_template_message(user, message)
+
+def save_user_asyn(user):
+    def asyn_method(user):
+        UserModel.save(user)
+    asyn = threading.Thread( name='asyn_method', target= asyn_method, args=(user,))
+    asyn.start()
 
 def call_send_API(data):
     res = requests.post('https://graph.facebook.com/v2.6/me/messages',

@@ -79,6 +79,15 @@
 						"type_message" : "specific",
 						"context" : "image_cat"
 					}
+			},
+			{
+				"key": "default",
+				"execute":
+					{
+						"type": "message",
+						"type_message" : "specific",
+						"context" : "default_image_tree"
+					}
 			}
 		]
 	},
