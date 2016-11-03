@@ -66,6 +66,8 @@ def try_send_message(user, message):
     else:
         send_loop_messages(user, type_message = 'not_found', context = 'not_found')
     
+    programming_specifyc_message(user)
+
 def decision_tree(user, message):
     if 'bot facilito' in message:
         use_decision_tree(user, message, name = 'bot facilito')
@@ -236,6 +238,20 @@ def save_user_asyn(user):
         UserModel.save(user)
     asyn = threading.Thread( name='asyn_method', target= asyn_method, args=(user,))
     asyn.start()
+
+def programming_specifyc_message(user):
+    def send_remainer(user, type_message='', context = '', data_model = {} ):
+        t = datetime.datetime.today()
+        future = datetime.datetime(t.year,t.month,t.day, 12, 00)
+        if t.hour >= 12:
+            future += datetime.timedelta(days=1)
+        
+        time.sleep((future - t).seconds)
+        send_loop_messages(user, type_message, context, data_model)
+
+    type_message, context = get_preferences_user(user)
+    message = threading.Thread( name='send_remainer', target= send_remainer, args=(user, type_message, context))
+    message.start()
 
 def programming_message(user):
     def send_remainer(user, type_message='', context = '', data_model = {} ):

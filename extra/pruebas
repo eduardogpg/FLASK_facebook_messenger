@@ -1,16 +1,10 @@
 1.-Establcer el tiempo del ultimo mensaje
-
 	Agregmos el created_at a user
 	Creamos la funcion check_last_connection
 	Agregamos el mensaje en message Json
-
-
 2.- save_user_asyn
 		check_last_message
-
 3.-	programming_message
-		
 4.- Mensajes Programming de las preferencias
 		Segundos
-
 5.- Mensajes Programados por días, Hora en especifica
