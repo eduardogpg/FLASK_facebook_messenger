@@ -29,9 +29,6 @@ def set_greeting_message():
     message = create_greeting_message()
     call_send_API(message)
 
-def show_start_messaged(event, token, username):
-    print event
-
 def received_message(event, token, username):
     sender_id = event['sender']['id']
     recipient_id = event['recipient']['id']
@@ -63,12 +60,15 @@ def try_send_message(user, message):
 
     if 'ayuda' in message['text']:
         send_loop_messages(user, type_message = 'help', context = 'help')
-    
-    elif 'eggs' in message['text']:
-        send_loop_messages(user, type_message = 'eggs', context = 'eggs')
-        #programming_message(user)
+    elif 'contacto desarrollador' in message['text']:
+        send_loop_messages(user, type_message = 'develop', context = 'develop')
+    else:
+        send_loop_messages(user, type_message = 'not_found', context = 'not_found')
+        
+    """
     else:
         decision_tree(user, message['text'])
+    """
 
 def decision_tree(user, message):
     if 'bot facilito' in message:
@@ -189,16 +189,16 @@ def get_message_data(user, message, data_model):
     
     elif type_message == 'quick_replies_location':
         return create_quick_replies_location(user, message)
-    
+
+    elif type_message == 'template':
+        return create_template_message(user, message)
+
     elif type_message == 'image':
         return create_image_message(user, message)
         
     elif type_message == 'video':
         return create_video_message(user, message)
         
-    elif type_message == 'template':
-        return create_template_message(user, message)
-
 def save_user_asyn(user):
     def asyn_method(user):
         UserModel.save(user)

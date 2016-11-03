@@ -26,7 +26,7 @@
 	},
 	{
 		"title" : "obtener preferencias",
-		"content" : "De que tema te gustaria que hablaramos?",
+		"content" : "¿De qué tema te gustaría que habláramos?",
 		"context" : "welcome",
 		"type" : "common",
 		"order" : 4,
@@ -38,24 +38,10 @@
 				"payload" : "WEATHER"
 			},
 			{
-				"title" : "Ambos",
-				"payload" : "BOTH_MOVIES_AND_MUSIC"
-			},
-			{
 				"title" : "Ninguno",
-				"payload" : "Ninguno"
+				"payload" : "NOTHING"
 			}
 		]
-	},
-	{
-		"title" : "Clima info",
-		"content" : "Actualmente {city} se encuentra a {temperature} grados centigrados.",
-		"context" : "temperature",
-		"type" : "specific",
-		"order" : 1,
-		"format" : true,
-		"data_model": true,
-		"type_message" : "text_message"
 	},
 	{
 		"title" : "WEATHER",
@@ -93,8 +79,18 @@
 		"title" : "Ninguno",
 		"content" : "¿Cómo es posible eso?🙄",
 		"type" : "quick_replies",
-		"context" : "Ninguno",
+		"context" : "NOTHING",
 		"order" : 1,
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "Clima info",
+		"content" : "Actualmente {city} se encuentra a {temperature} grados centigrados.",
+		"context" : "temperature",
+		"type" : "specific",
+		"order" : 1,
+		"format" : true,
+		"data_model": true,
 		"type_message" : "text_message"
 	},
 	{
@@ -107,7 +103,7 @@
 	},
 	{
 		"title" : "Ayuda",
-		"content" : "Si quieres contactar al desarrollado de este bot solo escribe 'eggs' ",
+		"content" : "Si quieres contactar al desarrollado de este bot solo escribe 'contacto desarrollador' ",
 		"type" : "help",
 		"context" : "help",
 		"order" : 2,
@@ -132,8 +128,8 @@
 	{
 		"title" : "Conctato con el desarrollador",
 		"content" : "Te recuerdo que puedes cambiar las configuraciones escribiendo 'Mis configuraciones' :) ",
-		"type" : "eggs",
-		"context" : "eggs",
+		"type" : "develop",
+		"context" : "develop",
 		"order" : 1,
 		"type_message" : "template",
 		"template_type": "generic",
@@ -241,7 +237,5 @@
 		"format" : true,
 		"type_message" : "text_message"
 	}
-
-	
 
 ]

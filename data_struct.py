@@ -3,6 +3,7 @@ from structs import text_message
 from structs import image_message
 from structs import video_message
 from structs import video_message
+from structs import audio_message
 from structs import typing_message
 from structs import replie_location
 from structs import item_quick_replie
@@ -48,6 +49,9 @@ def create_image_message(user, data):
 
 def create_video_message(user, data):
     return video_message( user['user_id'], data['url'])
+
+def create_audio_message(user, data):
+    return audio_message( user['user_id'], data['url'])
 
 
 

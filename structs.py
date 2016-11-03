@@ -109,9 +109,25 @@ def video_message(recipient_id, url):
         "attachment":{
             "type":"image",
                 "payload":{
-                    "url":"https://petersapparel.com/bin/clip.mp4"
+                    "url": url
                 }
             }
         }
     }   
     return message_data
+
+def audio_message(recipient_id, url):
+    message_data = {
+        "recipient":{ "id": recipient_id},
+        "message":{
+        "attachment":{
+            "type":"audio",
+                "payload":{
+                    "url": url
+                }
+            }
+        }
+    }   
+    return message_data
+
+
