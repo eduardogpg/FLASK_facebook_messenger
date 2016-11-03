@@ -7,6 +7,7 @@ from datetime import timedelta
 import re
 import threading
 import time
+import random
 
 from models import UserModel
 from models import MessageModel
@@ -50,7 +51,7 @@ def handler_actions(user_id, message):
 
 def first_steps(user_id):
     data = call_user_API(user_id) 
-    user = UserModel.new( first_name = data['first_name'], last_name = data['last_name'], gender = data['gender'], user_id = user_id, last_message = datetime.datetime.now() )
+    user = UserModel.new( first_name = data['first_name'], last_name = data['last_name'], gender = data['gender'], user_id = user_id, created_at = datetime.datetime.now() )
     save_user_asyn(user)
     send_loop_messages(user, 'common', 'welcome')
 
@@ -64,12 +65,7 @@ def try_send_message(user, message):
         send_loop_messages(user, type_message = 'develop', context = 'develop')
     else:
         send_loop_messages(user, type_message = 'not_found', context = 'not_found')
-        
-    """
-    else:
-        decision_tree(user, message['text'])
-    """
-
+    
 def decision_tree(user, message):
     if 'bot facilito' in message:
         use_decision_tree(user, message, name = 'bot facilito')
@@ -80,12 +76,16 @@ def change_preference(user):
     send_single_message(user, identifier = 'set_preference')
 
 def check_last_connection(user):
-    now = datetime.datetime.now()
-    user['last_message'] = now
-    if not now + timedelta(minutes = 1) > now:
-        send_loop_messages(type_message="common", context = "return_user")
+    date_now = datetime.datetime.now()
+    last_message = user.get('last_message', date_now)
 
-    save_user_asyn(user)
+    #if  (last_message + datetime.timedelta(minutes = 1) ) > date_now:
+    if 2 > 5:
+        send_loop_messages(user, type_message='specific', context='return_user')
+        programming_message()
+
+    user['last_message'] = date_now
+    UserModel.save(user)
 
 def validate_quick_replies(user, message):
     quick_replie = message.get('quick_reply', {})
@@ -112,7 +112,7 @@ def set_user_quick_replie(quick_replie, user):
         if not preferences or payload not in preferences:
             preferences.append(payload)
         
-        user['preference'] = preferences
+        user['preferences'] = preferences
         save_user_asyn(user)
         send_loop_messages(user, type_message = 'quick_replies', context = payload )
 
@@ -199,12 +199,6 @@ def get_message_data(user, message, data_model):
     elif type_message == 'video':
         return create_video_message(user, message)
         
-def save_user_asyn(user):
-    def asyn_method(user):
-        UserModel.save(user)
-    asyn = threading.Thread( name='asyn_method', target= asyn_method, args=(user,))
-    asyn.start()
-
 def call_send_API(data):
     res = requests.post('https://graph.facebook.com/v2.6/me/messages',
                 params={ 'access_token': global_token},
@@ -231,14 +225,25 @@ def call_geosname_API(lat, lng):
         temperature = res['weatherObservation']['temperature']
         return {'city': city, 'temperature': temperature }
 
+def get_preferences_user(user):
+    preferences = user.get('preferences', [])
+    if preferences:
+        return 'reminder', random.choice(preferences)
+    return 'reminder', 'configuraciones'
+
+def save_user_asyn(user):
+    def asyn_method(user):
+        UserModel.save(user)
+    asyn = threading.Thread( name='asyn_method', target= asyn_method, args=(user,))
+    asyn.start()
+
 def programming_message(user):
-    message = threading.Thread( name='send_remainer',
-                                target= send_remainer,
-                                args=(user, 'Reminder', 'configuraciones'))
+    def send_remainer(user, type_message='', context = '', data_model = {} ):
+        time.sleep(20)
+        send_loop_messages(user, type_message, context, data_model)
+
+    type_message, context = get_preferences_user(user)
+    message = threading.Thread( name='send_remainer', target= send_remainer, args=(user, type_message, context))
     message.start()
-    
-def send_remainer(user, type_message='', context = '', data_model = {} ):
-    time.sleep(20)
-    send_loop_messages(user, type_message, context, data_model)
 
 

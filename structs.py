@@ -55,10 +55,16 @@ def greeting(title):
     }
     return message_data
 
-def button_item_template_message(title, payload):
+def button_item_template_postback(title, payload):
     button = {  "type": "postback",
                 "title": title,
                 "payload": payload }
+    return button
+
+def button_item_template_url(title, url):
+    button = {  "type": "web_url",
+                "title": title,
+                "url": url }
     return button
 
 def item_template_message(title, subtitle, item_url, image_url, buttons):

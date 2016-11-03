@@ -76,6 +76,14 @@
 		"type_message" : "quick_replies_location"
 	},
 	{
+		"title" : "WEATHER",
+		"content" : "Recuerda que puedes compartir una locación para conocer el clima",
+		"type" : "reminder",
+		"context" : "WEATHER",
+		"order" : 4,
+		"type_message" : "quick_replies_location"
+	},
+	{
 		"title" : "Ninguno",
 		"content" : "¿Cómo es posible eso?🙄",
 		"type" : "quick_replies",
@@ -119,7 +127,7 @@
 	},
 	{
 		"title" : "Recordatorio de configuraciones",
-		"content" : "Te recuerdo que puedes cambiar las configuraciones escribiendo 'Mis configuraciones' :) ",
+		"content" : "Te recuerdo que puedes cambiar las configuraciones escribiendo 'Mis configuraciones' ",
 		"type" : "Reminder",
 		"context" : "configuraciones",
 		"order" : 1,

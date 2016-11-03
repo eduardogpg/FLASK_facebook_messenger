@@ -9,9 +9,11 @@ from structs import replie_location
 from structs import item_quick_replie
 from structs import quick_replie_message
 
-from structs import button_item_template_message
+from structs import button_item_template_url
+from structs import button_item_template_postback
 from structs import item_template_message
 from structs import template_message_generic
+
 
 def create_greeting_message():
     return greeting('Mensaje')
@@ -42,7 +44,7 @@ def create_elements(data):
     return item_template_message(data['title'], data['subtitle'], data['item_url'], data['image_url'], buttons )
 
 def create_button(data):
-    return button_item_template_message(data['url'], data['title'])
+    return button_item_template_url(data['url'], data['title'])
 
 def create_image_message(user, data):
     return image_message( user['user_id'], data['url'])
