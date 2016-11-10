@@ -11,7 +11,7 @@ from handler import set_greeting_message
 import json
 
 __author__ = 'Eduardo Ismael García Pérez'
-__lastupdated__ = '2016 October 12'
+__lastupdated__ = '2016 Noviembre 08'
 
 
 app = Flask(__name__)

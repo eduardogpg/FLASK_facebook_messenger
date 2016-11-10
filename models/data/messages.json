@@ -135,38 +135,39 @@
 	},
 	{
 		"title" : "Conctato con el desarrollador",
-		"content" : "Te recuerdo que puedes cambiar las configuraciones escribiendo 'Mis configuraciones' :) ",
+		"content" : "Contacto",
 		"type" : "develop",
 		"context" : "develop",
 		"order" : 1,
 		"type_message" : "template",
 		"template_type": "generic",
 		"elements": [
-								{
-			            "title": "Eduardo García",
-			            "subtitle": "Redes sociales",
-			            "item_url": "https://codigofacilito.com/usuarios/8639",
-			            "image_url": "http://graph.facebook.com/100000141857371/picture?type=large",
-			            "buttons": [
-				            {
-				              "type": "web_url",
-				              "url": "https://www.facebook.com/Eduardo.Ismael.GP",
-				              "title": "Facebook"
-				            },
-				            {
-				              "type": "web_url",
-				              "url": "https://twitter.com/eduardo_gpg",
-				              "title": "Twitter"
-				            }
-				          ]
-				        }
+									{
+				            "title": "Eduardo García",
+				            "subtitle": "Redes sociales",
+				            "item_url": "https://codigofacilito.com/usuarios/8639",
+				            "image_url": "http://graph.facebook.com/100013580942529/picture?type=large",
+				            "buttons": [
+					            {
+					              "type": "web_url",
+					              "url": "https://www.facebook.com/Eduardo.Ismael.GP",
+					              "title": "Facebook"
+					            },
+					            {
+					              "type": "web_url",
+					              "url": "https://twitter.com/eduardo_gpg",
+					              "title": "Twitter"
+					            }
+					          ]
+					        }
+
           	]
 	},
 	{
 		"title" : "Mensaje no encontrado",
 		"content" : "Lo siento no puedo comprende lo que dices!",
 		"context" : "not_found",
-		"type" : "common",
+		"type" : "not_found",
 		"order" : 1,
 		"type_message" : "text_message"
 	},

@@ -24,7 +24,7 @@ from data_struct import create_quick_replies_location
 
 global_token = ''
 global_username = ''
-MIN_TIME = 1
+MAX_TIME = 600
 
 def set_greeting_message():
     message = create_greeting_message()
@@ -66,28 +66,25 @@ def try_send_message(user, message):
     else:
         send_loop_messages(user, type_message = 'not_found', context = 'not_found')
     
-    programming_specifyc_message(user)
-
 def decision_tree(user, message):
     if 'bot facilito' in message:
         use_decision_tree(user, message, name = 'bot facilito')
     else:
-        send_loop_messages(user, type_message = 'common', context = 'not_found')
+        send_loop_messages(user, type_message = 'not_found', context = 'not_found')
 
 def change_preference(user):
     send_single_message(user, identifier = 'set_preference')
 
 def check_last_connection(user):
-    date_now = datetime.datetime.now()
-    last_message = user.get('last_message', date_now)
+    now = datetime.datetime.now()
+    last_message = user.get('last_message', now)
 
-    #if  (last_message + datetime.timedelta(minutes = 1) ) > date_now:
-    if 2 > 5:
+    if (now - last_message).seconds >= MAX_TIME:
         send_loop_messages(user, type_message='specific', context='return_user')
-        programming_message()
+        programming_specifyc_message()
 
-    user['last_message'] = date_now
-    UserModel.save(user)
+    user['last_message'] = now
+    save_user_asyn(user)
 
 def validate_quick_replies(user, message):
     quick_replie = message.get('quick_reply', {})
@@ -138,14 +135,8 @@ def add_user_location(user, lat, lng):
     locations.append( {'lat': lat, 'lng': lng, 'city': data_model['city'], 'created_at': datetime.datetime.now()  } )
     user['locations'] = locations
     save_user_asyn(user)
-    
     send_loop_messages(user, 'specific', 'temperature', data_model)
         
-def validate_actions(user_id):
-    message = 'Es bueno tenerte de regreso {name}'.format(name = user['first_name'])
-    message_data = text_message(user_id, message)
-    call_send_API(message_data)
-
 def use_decision_tree(user, message, name = "", completed = False):
     decision = DecisionModel.find(name = name)
     if decision:
@@ -195,6 +186,7 @@ def get_message_data(user, message, data_model):
     elif type_message == 'template':
         return create_template_message(user, message)
 
+    #Hasta aqui vamos
     elif type_message == 'image':
         return create_image_message(user, message)
         

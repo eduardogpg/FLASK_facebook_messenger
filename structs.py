@@ -67,14 +67,26 @@ def button_item_template_url(title, url):
                 "url": url }
     return button
 
-def item_template_message(title, subtitle, item_url, image_url, buttons):
+def button_item_template_message(title, url):
+    button = {  "type": "web_url",
+                "title": title,
+                "url": url }
+    return button
+
+def button_item_template_message_postback(title, payload):
+    button = {  "type": "postback",
+                "title": title,
+                "payload": payload }
+    return button
+ 
+def element_template_message(title, subtitle, item_url, image_url, buttons):
     item = { 
-            "title": title,
-            "subtitle": subtitle,
-            "item_url": item_url,
-            "image_url": image_url,
-            "buttons": buttons
-            }
+        "title": title,
+        "subtitle": subtitle,
+        "item_url": item_url,
+        "image_url": image_url,
+        "buttons": buttons
+    }
     return item
 
 def template_message_generic(recipient_id, elements):
@@ -91,8 +103,9 @@ def template_message_generic(recipient_id, elements):
                     }
                 }
         }
-    } 
+    }
     return message_data 
+    
 
 def image_message(recipient_id, url):
     message_data = {

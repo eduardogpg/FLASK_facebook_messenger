@@ -9,11 +9,9 @@ from structs import replie_location
 from structs import item_quick_replie
 from structs import quick_replie_message
 
-from structs import button_item_template_url
-from structs import button_item_template_postback
-from structs import item_template_message
 from structs import template_message_generic
-
+from structs import element_template_message
+from structs import button_item_template_message
 
 def create_greeting_message():
     return greeting('Mensaje')
@@ -35,16 +33,15 @@ def create_typing_message(user):
 	return typing_message(user['user_id'])
 
 def create_template_message(user, data):
-    print user
-    elements = [create_elements(element) for element in data['elements'] ]
-    return template_message_generic(user['user_id'], elements)
+    elements = [  create_element_template_message(element)  for element in data['elements'] ]
+    return template_message_generic(user['user_id'], elements)  
 
-def create_elements(data):
-    buttons = [ create_button(button) for button in data['buttons']  ]
-    return item_template_message(data['title'], data['subtitle'], data['item_url'], data['image_url'], buttons )
+def create_element_template_message(data):
+    buttons = [ create_button_item_template_message(button)  for button in data['buttons']]
+    return element_template_message(data['title'], data['subtitle'], data['item_url'], data['image_url'], buttons)
 
-def create_button(data):
-    return button_item_template_url(data['url'], data['title'])
+def create_button_item_template_message(data):
+    return button_item_template_message(data['title'], data['url'])
 
 def create_image_message(user, data):
     return image_message( user['user_id'], data['url'])
