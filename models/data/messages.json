@@ -245,6 +245,13 @@
 		"order" : 1,
 		"format" : true,
 		"type_message" : "text_message"
+	},
+	{
+		"title" : "Mensaje no encontrado",
+		"content" : "Recuerda que siempre podrás hablar con migo!",
+		"context" : "remainer",
+		"type" : "remainer",
+		"order" : 1,
+		"type_message" : "text_message"
 	}
-
 ]

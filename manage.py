@@ -6,7 +6,6 @@ from flask import request
 
 from config import DevelopmentConfig
 from handler import received_message
-from handler import set_greeting_message
 
 import json
 
@@ -45,6 +44,5 @@ def webhook():
 		return "ok"
 
 if __name__ == '__main__':
-	set_greeting_message()
 	app.run(port = 8000)
 

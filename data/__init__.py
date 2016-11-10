@@ -51,4 +51,3 @@ def create_video_message(user, data):
 
 def create_audio_message(user, data):
     return audio_message( user['user_id'], data['url'])
-
