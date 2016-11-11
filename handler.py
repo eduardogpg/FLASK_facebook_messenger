@@ -4,6 +4,7 @@ import json
 import requests
 import datetime
 from datetime import timedelta
+from collections import OrderedDict
 import re
 import threading
 import time
@@ -17,6 +18,7 @@ from models import DecisionModel
 global_token = ''
 global_username = ''
 MAX_TIME = 600
+
 
 def received_post_back(event, token):
     sender_id = event['sender']['id']
@@ -238,11 +240,17 @@ def save_user_asyn(user):
     asyn = threading.Thread( name='asyn_method', target= asyn_method, args=(user,))
     asyn.start()
 
+def send_message_by_weather(user):
+    send_loop_messages(user, type_message='remainer', context= 'WEATHER')
+
 def send_messsage_by_preference(user):
     preference = get_preference(user)
     if preference is not None:
-        if preference == 'WEATHER':
-            send_loop_messages(user, type_message='remainer', context= 'WEATHER')
+        menu[preference](user) #Ejecutamos la función asociada
+       
+menu = OrderedDict([
+    ('WEATHER', send_message_by_weather)
+]) 
 
 def get_preference(user):
     preferences = user.get('preferences', [])
