@@ -18,6 +18,16 @@ global_token = ''
 global_username = ''
 MAX_TIME = 600
 
+def received_post_back(event, token):
+    sender_id = event['sender']['id']
+    recipient_id = event['recipient']['id']
+    time_post_back = event['timestamp'];
+    payload = event['postback']['payload']
+
+    global global_token
+    global_token = token
+    
+    handler_postback(sender_id, payload)
 
 def received_message(event, token, username):
     sender_id = event['sender']['id']
@@ -38,6 +48,10 @@ def handler_actions(user_id, message):
     else:
         try_send_message(user, message)
 
+def handler_postback(user_id, payload):
+    user = models.UserModel.find(user_id = user_id)
+    send_loop_messages(user, type_message='postback', context=payload)
+
 def first_steps(user_id):
     data = call_user_API(user_id) 
     user = models.UserModel.new( first_name = data['first_name'], last_name = data['last_name'], gender = data['gender'], user_id = user_id, created_at = datetime.datetime.now() )
@@ -47,7 +61,8 @@ def first_steps(user_id):
 def try_send_message(user, message):
     validate_quick_replies(user, message) 
     check_last_connection(user)
-
+    send_messsage_by_preference(user)
+    
     if 'ayuda' in message['text']:
         send_loop_messages(user, type_message = 'help', context = 'help')
     elif 'contacto desarrollador' in message['text']:
@@ -102,6 +117,7 @@ def set_user_quick_replie(quick_replie, user):
         
         user['preferences'] = preferences
         save_user_asyn(user)
+        print(payload)
         send_loop_messages(user, type_message = 'quick_replies', context = payload )
 
 def check_actions(user, action):
@@ -222,6 +238,17 @@ def save_user_asyn(user):
     asyn = threading.Thread( name='asyn_method', target= asyn_method, args=(user,))
     asyn.start()
 
+def send_messsage_by_preference(user):
+    preference = get_preference(user)
+    if preference is not None:
+        if preference == 'WEATHER':
+            send_loop_messages(user, type_message='remainer', context= 'WEATHER')
+
+def get_preference(user):
+    preferences = user.get('preferences', [])
+    if preferences:
+        return random.choice(preferences)
+
 def programming_message(user):
     def send_reaminer(user):
         today = datetime.datetime.today()
@@ -230,9 +257,6 @@ def programming_message(user):
         time.sleep( (future - today).seconds )
         send_loop_messages(user, type_message='remainer', context= 'remainer')
 
-    message = threading.Thread(name='send_reaminer', target= send_reaminer, 
-                                                        args=(user, ))
+    message = threading.Thread(name='send_reaminer', target= send_reaminer, args=(user, ))
     message.start()
-
-
 

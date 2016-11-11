@@ -1,10 +1,10 @@
 [
 	{
 		"title" : "Mensaje de bienvenida",
-		"content" : "Hola {first_name} me complace anunciarte que hemos registrados tus datos correctamente!",
+		"content" : "Hola usuario {first_name} me complace anunciarte que hemos registrados tus datos correctamente!",
 		"context" : "welcome",
 		"type" : "common",
-		"order" : 1,
+		"order" : 3,
 		"format" : true,
 		"type_message" : "text_message"
 	},
@@ -17,16 +17,16 @@
 		"type_message" : "text_message"
 	},
 	{
-		"title" : "Obtener información",
-		"content" : "Antes de comenzar necesito recabar cierta información, espero no te moleste!",
+		"title" : "Obtener info",
+		"content" : "Antes de comenzar necesito recabar cierta información, espero no te moleste",
 		"context" : "welcome",
 		"type" : "common",
-		"order" : 3,
+		"order" : 1,
 		"type_message" : "text_message"
 	},
 	{
 		"title" : "obtener preferencias",
-		"content" : "¿De qué tema te gustaría que habláramos?",
+		"content" : "¿De qué te gustaría que habláramos?",
 		"context" : "welcome",
 		"type" : "common",
 		"order" : 4,
@@ -34,12 +34,12 @@
 		"type_message" : "quick_replies",
 		"replies" : [
 			{
-				"title" : "El clima",
+				"title" : "Clima",
 				"payload" : "WEATHER"
 			},
 			{
-				"title" : "Ninguno",
-				"payload" : "NOTHING"
+				"title" : "Nada",
+				"payload" : "NADA"
 			}
 		]
 	},
@@ -61,33 +61,17 @@
 	},
 	{
 		"title" : "WEATHER",
-		"content" : "Hagamos una prueba para ver como funciona!",
+		"content" : "hagamos una prueba, selecciona tu localización",
 		"type" : "quick_replies",
 		"context" : "WEATHER",
 		"order" : 3,
-		"type_message" : "text_message"
-	},
-	{
-		"title" : "WEATHER",
-		"content" : "Selecciona una locación!",
-		"type" : "quick_replies",
-		"context" : "WEATHER",
-		"order" : 4,
 		"type_message" : "quick_replies_location"
 	},
 	{
-		"title" : "WEATHER",
-		"content" : "Recuerda que puedes compartir una locación para conocer el clima",
-		"type" : "reminder",
-		"context" : "WEATHER",
-		"order" : 4,
-		"type_message" : "quick_replies_location"
-	},
-	{
-		"title" : "Ninguno",
-		"content" : "¿Cómo es posible eso?🙄",
+		"title" : "NADA",
+		"content" : "opps! ¿entonces de que hablamos?",
 		"type" : "quick_replies",
-		"context" : "NOTHING",
+		"context" : "NADA",
 		"order" : 1,
 		"type_message" : "text_message"
 	},
@@ -102,22 +86,6 @@
 		"type_message" : "text_message"
 	},
 	{
-		"title" : "Ayuda",
-		"content" : "Si necesitas cambiar de preferencias solo escribe 'cambio de preferencias' :D ",
-		"type" : "help",
-		"context" : "help",
-		"order" : 1,
-		"type_message" : "text_message"
-	},
-	{
-		"title" : "Ayuda",
-		"content" : "Si quieres contactar al desarrollado de este bot solo escribe 'contacto desarrollador' ",
-		"type" : "help",
-		"context" : "help",
-		"order" : 2,
-		"type_message" : "text_message"
-	},
-	{
 		"title" : "Clima completado",
 		"content" : "Ahora que ya sabes como funciona el clima en este bot, puedes hacerlo las veces que quieras :D",
 		"type" : "Done",
@@ -126,10 +94,10 @@
 		"type_message" : "text_message"
 	},
 	{
-		"title" : "Recordatorio de configuraciones",
-		"content" : "Te recuerdo que puedes cambiar las configuraciones escribiendo 'Mis configuraciones' ",
-		"type" : "Reminder",
-		"context" : "configuraciones",
+		"title" : "Ayuda",
+		"content" : "Si necesitas contactar con el desarrollado escribe 'contacto desarrollador'",
+		"type" : "help",
+		"context" : "help",
 		"order" : 1,
 		"type_message" : "text_message"
 	},
@@ -151,94 +119,37 @@
 					            {
 					              "type": "web_url",
 					              "url": "https://www.facebook.com/Eduardo.Ismael.GP",
-					              "title": "Facebook"
+					              "title": "Facebook",
+					              "payload":"payload"
 					            },
 					            {
-					              "type": "web_url",
+					              "type": "postback",
 					              "url": "https://twitter.com/eduardo_gpg",
-					              "title": "Twitter"
+					              "title": "Twitter",
+					              "payload":"Twitter_Selection"
 					            }
 					          ]
 					        }
-
           	]
 	},
 	{
+		"title" : "Ayuda",
+		"content" : "No dudes en contactarnos 🐈 🍉 🍣",
+		"type" : "develop",
+		"context" : "develop",
+		"order" : 2,
+		"type_message" : "text_message"
+	},
+	{
 		"title" : "Mensaje no encontrado",
-		"content" : "Lo siento no puedo comprende lo que dices!",
+		"content" : "Lo siento, no puedo comprender lo que dices!",
 		"context" : "not_found",
 		"type" : "not_found",
 		"order" : 1,
 		"type_message" : "text_message"
 	},
 	{
-		"title" : "About del bot",
-		"content" : "En teoria mi creador me dijo que era hombre, pero no estoy muy seguro",
-		"context" : "type_sex_bot",
-		"type" : "specific",
-		"order" : 1,
-		"type_message" : "text_message"
-	},
-	{
-		"title" : "About del bot",
-		"content" : "En teoria soy hombre :P ",
-		"context" : "type_sex_bot_man",
-		"type" : "specific",
-		"order" : 1,
-		"type_message" : "text_message"
-	},
-	{
-		"title" : "About del bot",
-		"content" : "<3 _ <3 mujeres",
-		"context" : "type_sex_bot_woman",
-		"type" : "specific",
-		"order" : 1,
-		"type_message" : "text_message"
-	},
-	{
-		"title" : "About del bot",
-		"content" : "no, no soy un toro :P, lo siento",
-		"context" : "type_top_bot",
-		"type" : "specific",
-		"order" : 1,
-		"type_message" : "text_message"
-	},
-	{
-		"title" : "About del bot",
-		"content" : "¿Qué opinas de esta imagen?",
-		"context" : "image_cat",
-		"type" : "specific",
-		"order" : 1,
-		"type_message" : "text_message"
-	},
-	{
-		"title" : "About del bot",
-		"content" : "¿Qué opinas de esta imagen?",
-		"context" : "image_cat",
-		"type" : "specific",
-		"order" : 2,
-		"url": "https://petersapparel.com/img/shirt.png",
-		"type_message" : "image"
-	},
-	{
-		"title" : "About del bot",
-		"content" : "¿Qué opinas de esta imagen?",
-		"context" : "random_video",
-		"type" : "specific",
-		"order" : 1,
-		"url": "https://petersapparel.com/bin/clip.mp4",
-		"type_message" : "video"
-	},
-	{
-		"title" : "no se encontro ningún tipo de imagen",
-		"content" : "Lo siento no pude comprender lo que me dices :( lo siento",
-		"type" : "specific",
-		"context" : "default_image_tree",
-		"order" : 1,
-		"type_message" : "text_message"
-	},
-	{
-		"title" : "About del bot",
+		"title" : "Regreso",
 		"content" : "Hola {first_name} es bueno tenerte de regreso :D",
 		"context" : "return_user",
 		"type" : "specific",
@@ -253,5 +164,30 @@
 		"type" : "remainer",
 		"order" : 1,
 		"type_message" : "text_message"
+	},
+	{
+		"title" : "Mensaje postback",
+		"content" : "Recibimos tu mensaje mediante postback",
+		"context" : "Twitter_Selection",
+		"type" : "postback",
+		"order" : 1,
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "Mensaje postback",
+		"content" : "Nosotros nos contactamos con tigo 🔥",
+		"context" : "Twitter_Selection",
+		"type" : "postback",
+		"order" : 2,
+		"type_message" : "text_message"
+	},
+	{
+		"title" : "Mensaje de clima de recordatorio",
+		"content" : "El clima es tan lindo!",
+		"context" : "WEATHER",
+		"type" : "remainer",
+		"order" : 1,
+		"type_message" : "text_message"
 	}
+
 ]

@@ -6,12 +6,12 @@ from flask import request
 
 from config import DevelopmentConfig
 from handler import received_message
+from handler import received_post_back
 
 import json
 
 __author__ = 'Eduardo Ismael García Pérez'
 __lastupdated__ = '2016 Noviembre 08'
-
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -31,15 +31,15 @@ def webhook():
 	elif request.method == 'POST':
 		payload = request.get_data()
 		data = json.loads(payload)
-			
+		
+		print data
+
 		for page_entry in data['entry']:
 			for message_event in page_entry['messaging']:
-				
 				if "message" in message_event:
 					received_message(message_event, app.config['PAGE_ACCESS_TOKEN'], app.config['USER_GEOSNAME'])
-				
-				elif "postback" in message_event:
-					print message_event
+				if "postback" in message_event:
+					received_post_back(message_event, app.config['PAGE_ACCESS_TOKEN'])
 
 		return "ok"
 

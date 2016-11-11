@@ -11,7 +11,8 @@ from structs import quick_replie_message
 
 from structs import template_message_generic
 from structs import element_template_message
-from structs import button_item_template_message
+from structs import button_item_template_message_url
+from structs import button_item_template_message_payload
 
 def create_greeting_message():
     return greeting('Mensaje')
@@ -41,7 +42,10 @@ def create_element_template_message(data):
     return element_template_message(data['title'], data['subtitle'], data['item_url'], data['image_url'], buttons)
 
 def create_button_item_template_message(data):
-    return button_item_template_message(data['title'], data['url'])
+    if data.get('type', '') == 'web_url':
+        return button_item_template_message_url(data['title'], data['url'])
+    else:
+        return button_item_template_message_payload(data['title'], data['payload'])
 
 def create_image_message(user, data):
     return image_message( user['user_id'], data['url'])
