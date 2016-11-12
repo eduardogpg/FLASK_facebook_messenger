@@ -19,8 +19,9 @@ global_token = ''
 global_username = ''
 MAX_TIME = 600
 
-
 def received_post_back(event, token):
+    print("postback recived")
+
     sender_id = event['sender']['id']
     recipient_id = event['recipient']['id']
     time_post_back = event['timestamp'];
@@ -45,14 +46,15 @@ def received_message(event, token, username):
 
 def handler_actions(user_id, message):
     user = models.UserModel.find(user_id = user_id)
-    if user is None:
-        first_steps(user_id)
-    else:
-        try_send_message(user, message)
+    try_send_message(user, message)
 
 def handler_postback(user_id, payload):
-    user = models.UserModel.find(user_id = user_id)
-    send_loop_messages(user, type_message='postback', context=payload)
+    if payload == 'USER_DEFINED_PAYLOAD':
+        print("Primero pasos seguros")
+        first_steps(user_id)
+    else:
+        user = models.UserModel.find(user_id = user_id)
+        send_loop_messages(user, type_message='postback', context=payload)
 
 def first_steps(user_id):
     data = call_user_API(user_id) 
@@ -163,7 +165,6 @@ def use_decision_tree(user, message, name = "", completed = False):
 
 def send_loop_messages(user, type_message='', context = '', data_model = {} ):
     messages = models.MessageModel.find_by_order(type = type_message, context = context)
-    
     for message in messages:
         send_message(user, message, data_model)
 
@@ -217,6 +218,16 @@ def call_user_API(user_id):
     data = json.loads(res.text)
     return data
 
+def call_thread_settings(access_token):
+    res = requests.post('https://graph.facebook.com/v2.6/me/thread_settings?' + access_token, 
+        params= { 'setting_type': 'call_to_actions',
+                    'thread_state' : 'new_thread',
+                    'call_to_actions' : [{ 'payload': 'USER_DEFINED_PAYLOAD' }]}   )
+    
+    if res.status_code == 200:
+        print("Configuración hecha exitosamente!")
+
+
 def call_geosname_API(lat, lng):
     res = requests.get('http://api.geonames.org/findNearByWeatherJSON', 
         params={ 'lat': lat, 'lng': lng, 'username': global_username }   )
@@ -256,6 +267,15 @@ def get_preference(user):
     preferences = user.get('preferences', [])
     if preferences:
         return random.choice(preferences)
+
+def programming_setting(access_token):
+    def message(access_token):
+        print("Vamos a envir la configuración")
+        time.sleep(15)
+        call_thread_settings(access_token)
+
+    message = threading.Thread(name='message', target= message, args=(access_token, ))
+    message.start()
 
 def programming_message(user):
     def send_reaminer(user):

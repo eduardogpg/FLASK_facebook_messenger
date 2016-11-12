@@ -29,15 +29,16 @@ $ sudo pip install imgurpython
 
 ```
 
-
 Some links
 
 * [Facebook Documentation][facebook]
+* [Facebook Threds][facebook_settings]
 * [ngrol][ngrok]
 * [express][express]
 * [release your app ][release]
 * [API weather ][weather]
 * [Emojies][Emojie]
+
 
 :innocent:
 :cat:
@@ -49,4 +50,5 @@ Some links
 [release]: <https://developers.facebook.com/docs/messenger-platform/app-review/>
 [weather]: <http://www.geonames.org/enablefreewebservice/>
 [Emojie]: <http://emojipedia.org/>
+[facebook_settings]: <https://developers.facebook.com/docs/messenger-platform/thread-settings>
 
