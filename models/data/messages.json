@@ -188,6 +188,22 @@
 		"type" : "remainer",
 		"order" : 1,
 		"type_message" : "text_message"
+	},
+	{
+		"title" : "Imagen random",
+		"content" : "",
+		"context" : "random",
+		"type" : "image",
+		"order" : 1,
+		"type_message" : "image"
+	},
+	{
+		"title" : "Video random",
+		"content" : "",
+		"context" : "random",
+		"type" : "video",
+		"order" : 1,
+		"type_message" : "video"
 	}
 
 ]

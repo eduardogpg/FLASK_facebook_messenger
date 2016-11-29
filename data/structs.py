@@ -114,7 +114,7 @@ def image_message(recipient_id, url):
         "attachment":{
             "type":"image",
                 "payload":{
-                    "url":"http://i.imgur.com/SOFXhd6.jpg"
+                    "url":url
                 }
             }
         }
@@ -125,12 +125,12 @@ def video_message(recipient_id, url):
     message_data = {
         "recipient":{ "id":recipient_id},
         "message":{
-        "attachment":{
-            "type":"image",
-                "payload":{
-                    "url": url
+            "attachment":{
+                "type":"video",
+                    "payload":{
+                        "url": url
+                    }
                 }
-            }
         }
     }   
     return message_data
@@ -150,3 +150,16 @@ def audio_message(recipient_id, url):
     return message_data
 
 
+def file_message(recipient_id, url):
+    message_data = {
+        "recipient":{ "id": recipient_id},
+        "message":{
+        "attachment":{
+            "type":"file",
+                "payload":{
+                    "url": url
+                }
+            }
+        }
+    }   
+    return message_data

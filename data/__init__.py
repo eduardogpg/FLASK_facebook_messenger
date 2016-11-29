@@ -4,6 +4,8 @@ from structs import image_message
 from structs import video_message
 from structs import video_message
 from structs import audio_message
+from structs import file_message
+
 from structs import typing_message
 from structs import replie_location
 from structs import item_quick_replie
@@ -48,10 +50,27 @@ def create_button_item_template_message(data):
         return button_item_template_message_payload(data['title'], data['payload'])
 
 def create_image_message(user, data):
-    return image_message( user['user_id'], data['url'])
+    url = data.get('url', '')
+    if not url:
+        url = 'http://i.imgur.com/T29iOcj.jpg' #Esto deberia ser dinamico mover esto a API
+    return image_message( user['user_id'], url)
 
 def create_video_message(user, data):
-    return video_message( user['user_id'], data['url'])
+    url = data.get('url', '')
+    if not url:
+        url = 'http://techslides.com/demos/sample-videos/small.mp4'
+    return video_message( user['user_id'], url)
 
 def create_audio_message(user, data):
-    return audio_message( user['user_id'], data['url'])
+    url = data.get('url', '')
+    if not url:
+        url = 'http://techslides.com/demos/sample-videos/small.mp4'
+    return audio_message( user['user_id'], url)
+
+def create_file_message(user, data):
+    url = data.get('url', '')
+    if not url:
+        url = 'http://techslides.com/demos/sample-videos/small.mp4'
+    return file_message( user['user_id'], url)
+
+

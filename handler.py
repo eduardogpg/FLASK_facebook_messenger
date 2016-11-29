@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import json
-import requests
 import datetime
 from datetime import timedelta
 from collections import OrderedDict
-import re
 import threading
 import time
 import random
 
 import data
 import models
+from api import *
 
 from models import DecisionModel
 
@@ -50,29 +48,37 @@ def handler_actions(user_id, message):
 
 def handler_postback(user_id, payload):
     if payload == 'USER_DEFINED_PAYLOAD':
-        print("Primero pasos seguros")
         first_steps(user_id)
     else:
         user = models.UserModel.find(user_id = user_id)
         send_loop_messages(user, type_message='postback', context=payload)
 
 def first_steps(user_id):
-    data = call_user_API(user_id) 
+    data = call_user_API(user_id, global_token) 
     user = models.UserModel.new( first_name = data['first_name'], last_name = data['last_name'], gender = data['gender'], user_id = user_id, created_at = datetime.datetime.now() )
     save_user_asyn(user)
     send_loop_messages(user, 'common', 'welcome')
 
 def try_send_message(user, message):
-    validate_quick_replies(user, message) 
-    check_last_connection(user)
-    send_messsage_by_preference(user)
+    actions =  validate_quick_replies(user, message) or check_last_connection(user)
+    #send_messsage_by_preference(user)
     
     if 'ayuda' in message['text']:
         send_loop_messages(user, type_message = 'help', context = 'help')
+
     elif 'contacto desarrollador' in message['text']:
         send_loop_messages(user, type_message = 'develop', context = 'develop')
+
+    elif 'imagen random' in message['text']:
+        #Un consejo obtener la imagen de lo que el usuario quiera!
+        send_loop_messages(user, type_message = 'image', context = 'random')
+    
+    elif 'video random' in message['text']:
+        send_loop_messages(user, type_message = 'video', context = 'random')
+
     else:
-        send_loop_messages(user, type_message = 'not_found', context = 'not_found')
+        if not actions:
+            send_loop_messages(user, type_message = 'not_found', context = 'not_found')
     
 def decision_tree(user, message):
     if 'bot facilito' in message:
@@ -87,12 +93,13 @@ def check_last_connection(user):
     now = datetime.datetime.now()
     last_message = user.get('last_message', now)
 
+    user['last_message'] = now
+    save_user_asyn(user)
+
     if (now - last_message).seconds >= MAX_TIME:
         send_loop_messages(user, type_message='specific', context='return_user')
         programming_message()
-
-    user['last_message'] = now
-    save_user_asyn(user)
+        return True
 
 def validate_quick_replies(user, message):
     quick_replie = message.get('quick_reply', {})
@@ -103,6 +110,7 @@ def validate_quick_replies(user, message):
             set_user_attachment(user, attachments)
         elif quick_replie:
             set_user_quick_replie(quick_replie, user)
+        return True
 
 def set_user_attachment(user, attachments):
     for attachment in attachments:
@@ -138,7 +146,7 @@ def get_location(coordinates):
     return coordinates['lat'], coordinates['long']
 
 def add_user_location(user, lat, lng):
-    data_model = call_geosname_API(lat, lng)
+    data_model = call_geosname_API(lat, lng, global_username)
 
     locations = user.get('locations', [])
     locations.append( {'lat': lat, 'lng': lng, 'city': data_model['city'], 'created_at': datetime.datetime.now()  } )
@@ -175,8 +183,8 @@ def send_single_message(user, identifier = ''):
 def send_message(user, message, data_model = {} ):
     message_data, typing_data = get_message_data(user, message, data_model)
 
-    call_send_API( typing_data )
-    call_send_API( message_data)
+    call_send_API( typing_data, global_token)
+    call_send_API( message_data, global_token)
 
 def get_message_data(user, message, data_model):
     type_message = message.get('type_message', '')
@@ -201,43 +209,13 @@ def get_message_data(user, message, data_model):
     elif type_message == 'video':
         final_message = data.create_video_message(user, message)
 
+    elif type_message == 'audio':
+        final_message = data.create_audio_message(user, message)
+
+    elif type_message == 'file':
+        final_message = data.create_file_message(user, message)
+
     return final_message, data.create_typing_message(user)
-
-def call_send_API(data):
-    res = requests.post('https://graph.facebook.com/v2.6/me/messages',
-                params={ 'access_token': global_token},
-                data= json.dumps( data ),
-                headers={'Content-type': 'application/json'})
-
-    if res.status_code == 200:
-        print "Mensaje enviado exitosamente!"
-    
-def call_user_API(user_id):
-    res = requests.get('https://graph.facebook.com/v2.6/'+ user_id, 
-            params={ 'access_token': global_token} )
-    data = json.loads(res.text)
-    return data
-
-def call_thread_settings(access_token):
-    res = requests.post('https://graph.facebook.com/v2.6/me/thread_settings?' + access_token, 
-        params= { 'setting_type': 'call_to_actions',
-                    'thread_state' : 'new_thread',
-                    'call_to_actions' : [{ 'payload': 'USER_DEFINED_PAYLOAD' }]}   )
-    
-    if res.status_code == 200:
-        print("Configuración hecha exitosamente!")
-
-
-def call_geosname_API(lat, lng):
-    res = requests.get('http://api.geonames.org/findNearByWeatherJSON', 
-        params={ 'lat': lat, 'lng': lng, 'username': global_username }   )
-
-    if res.status_code == 200:
-        res = json.loads(res.text)
-
-        city = res['weatherObservation']['stationName']
-        temperature = res['weatherObservation']['temperature']
-        return {'city': city, 'temperature': temperature }
 
 def get_preferences_user(user):
     preferences = user.get('preferences', [])
@@ -267,15 +245,6 @@ def get_preference(user):
     preferences = user.get('preferences', [])
     if preferences:
         return random.choice(preferences)
-
-def programming_setting(access_token):
-    def message(access_token):
-        print("Vamos a envir la configuración")
-        time.sleep(15)
-        call_thread_settings(access_token)
-
-    message = threading.Thread(name='message', target= message, args=(access_token, ))
-    message.start()
 
 def programming_message(user):
     def send_reaminer(user):
