@@ -113,6 +113,9 @@ def validate_quick_replies(user, message):
         return True
 
 def set_user_attachment(user, attachments):
+    print attachments
+    print "\n\n\n\n"
+
     for attachment in attachments:
         if attachment['type'] == 'location':
             coordinates = attachment['payload']['coordinates']
